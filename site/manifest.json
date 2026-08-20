@@ -1,0 +1,17 @@
+{
+  "latest": "0.3.0",
+  "versions": [
+    {
+      "version": "0.3.0",
+      "date": "2026-08-20",
+      "gitTag": "v0.3.0",
+      "notes": "Alfred-Pi: nombre público, sitio bilingüe y mudanza desde 0.2."
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-08-20",
+      "gitTag": "v0.2.0",
+      "notes": "Centro de control para pi. Docs estáticos en esta misma carpeta."
+    }
+  ]
+}

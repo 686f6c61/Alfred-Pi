@@ -1,0 +1,50 @@
+{
+  "id": "qa-testing",
+  "name": "QA / Testing",
+  "description": "Testing as a discipline - test strategy and risk matrices, deterministic fixtures, contract testing between services, and flaky test hunting",
+  "version": "0.1.0",
+  "packages": [
+    "tdd-enforcer"
+  ],
+  "recommended": {
+    "thinkingLevel": "high"
+  },
+  "repoHints": ["e2e/", "test/", "tests/", "__tests__/", "playwright.config.ts", "cypress/"],
+  "triggers": [
+    "qa",
+    "quality assurance",
+    "garantía de calidad",
+    "garantia de calidad",
+    "plan de pruebas",
+    "estrategia de pruebas",
+    "test plan",
+    "test strategy",
+    "casos de prueba",
+    "test cases",
+    "matriz de riesgo",
+    "coverage",
+    "cobertura",
+    "huecos de cobertura",
+    "coverage gaps",
+    "flaky",
+    "inestable",
+    "falla a veces",
+    "falla aleatoriamente",
+    "intermitente",
+    "contract testing",
+    "pacto",
+    "pact",
+    "fixtures",
+    "factorías",
+    "factories",
+    "datos de prueba",
+    "test data",
+    "regresión",
+    "regresion",
+    "regression",
+    "smoke test",
+    "prueba de humo",
+    "suite",
+    "qa testing"
+  ]
+}

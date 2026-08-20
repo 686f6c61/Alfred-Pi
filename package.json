@@ -1,0 +1,29 @@
+{
+  "name": "alfred-pi",
+  "version": "0.3.0",
+  "description": "Alfred-Pi: control center for the pi coding agent. Providers, doctor, domain packs, budget and relay. A product of harness.moe.",
+  "type": "module",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "provider-manager",
+    "tui",
+    "coding-agent"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/686f6c61/Alfred-Pi.git"
+  },
+  "pi": {
+    "extensions": [
+      "index.ts"
+    ]
+  },
+  "scripts": {
+    "docs:site": "bun --cwd www run build",
+    "docs:site:check": "bun --cwd www run check",
+    "docs:site:dev": "bun --cwd www run dev"
+  }
+}

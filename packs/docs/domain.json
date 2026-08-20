@@ -1,0 +1,60 @@
+{
+  "id": "docs",
+  "name": "Docs",
+  "description": "Documentation discipline - Diátaxis structure, docstrings that explain why, ADRs, changelog hygiene and docs audits",
+  "version": "0.1.0",
+  "packages": [
+    "@barlevalon/documentation-system-skill",
+    "@evolvehq/docflow",
+    "@noice-tech/pi-changelog"
+  ],
+  "recommended": {
+    "thinkingLevel": "medium"
+  },
+  "repoHints": [
+    "docs/",
+    "CONTRIBUTING.md"
+  ],
+  "triggers": [
+    "documentation",
+    "documentación",
+    "documentacion",
+    "documentar",
+    "docs",
+    "guía",
+    "guia",
+    "guide",
+    "tutorial",
+    "how-to",
+    "howto",
+    "referencia",
+    "reference",
+    "explicación",
+    "explicacion",
+    "diátaxis",
+    "diataxis",
+    "docstring",
+    "jsdoc",
+    "comentario",
+    "adr",
+    "decision record",
+    "decisión de arquitectura",
+    "decision de arquitectura",
+    "changelog",
+    "readme",
+    "cobertura de docs",
+    "doc coverage",
+    "escribir docs",
+    "write docs",
+    "documentación de usuario",
+    "user guide",
+    "manual",
+    "notas de versión",
+    "notas de la versión",
+    "glosario",
+    "api docs",
+    "quickstart",
+    "guía rápida",
+    "release notes"
+  ]
+}

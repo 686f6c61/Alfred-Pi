@@ -1,0 +1,45 @@
+{
+  "id": "compliance",
+  "name": "Compliance",
+  "description": "Privacy (GDPR), licensing and accessibility (WCAG) reviews for websites, forms and dependency trees",
+  "version": "0.1.0",
+  "recommended": {
+    "thinkingLevel": "medium"
+  },
+  "triggers": [
+    "gdpr",
+    "rgpd",
+    "privacy",
+    "privacidad",
+    "cookie",
+    "licencia",
+    "licencia",
+    "license",
+    "gpl",
+    "agpl",
+    "mit license",
+    "apache license",
+    "spdx",
+    "copyleft",
+    "wcag",
+    "accessib",
+    "accesibilidad",
+    "a11y",
+    "consent",
+    "consentimiento",
+    "datos personales",
+    "personal data",
+    "retención",
+    "retention",
+    "derechos del usuario",
+    "subject rights",
+    "dpo",
+    "aviso legal",
+    "terms of service"
+  ],
+  "repoHints": [
+    "PRIVACY.md",
+    "THIRD-PARTY-NOTICES",
+    "THIRD-PARTY-NOTICES.md"
+  ]
+}

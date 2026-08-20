@@ -1,0 +1,42 @@
+{
+  "id": "ai-agents",
+  "name": "AI Agents",
+  "description": "Orchestrating pi agents - subagents, swarms, crews in worktrees, model assignment per role and budgets",
+  "version": "0.1.0",
+  "packages": ["pi-subagents", "@quintinshaw/pi-dynamic-workflows", "pi-crew", "@narumitw/pi-goal", "pi-memory", "@mjasnikovs/pi-task"],
+  "recommended": {
+    "thinkingLevel": "medium"
+  },
+  "triggers": [
+    "subagent",
+    "subagente",
+    "sub-agente",
+    "orchestr",
+    "orquesta",
+    "swarm",
+    "enjambre",
+    "crew",
+    "equipo de agentes",
+    "agent team",
+    "fan-out",
+    "fanout",
+    "paralel",
+    "paralelo",
+    "en paralelo",
+    "fleet",
+    "flota",
+    "delega",
+    "delegate",
+    "delegación",
+    "delegacion",
+    "multi-agent",
+    "multiagente",
+    "multi agente",
+    "workflow de agentes",
+    "agent workflow",
+    "dag",
+    "worktree",
+    "agentes en paralelo",
+    "varios agentes"
+  ]
+}

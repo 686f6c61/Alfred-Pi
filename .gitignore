@@ -1,0 +1,53 @@
+# Rama main: el harness. El sitio Astro vive en la rama landing
+# (árbol actual: www/). No se sube taller de modelos ni build.
+
+# --- site (other branch) ---
+www/
+
+# --- dependencies and build ---
+node_modules/
+dist/
+coverage/
+.astro/
+*.tsbuildinfo
+.cache/
+.bun/
+
+# --- logs and OS ---
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# --- local agent / editor ---
+.zcode/
+.claude/
+.grok/
+.cursor/
+.idea/
+.vscode/
+*.swp
+*.orig
+
+# --- env and secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+
+# --- workshop: LLM briefs, atoms, contracts, worker reports ---
+docs/auditoria/
+docs/internal/
+
+# --- old static HTML dump; the update channel is site/manifest.json ---
+site/*.html
+
+# --- visual-review dumps ---
+.playwright-mcp/
+/*.png
+/*.jpg
+/*.webp
+
+# --- leftover from the previous site path ---
+web/
+update-cache.json
