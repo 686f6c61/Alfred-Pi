@@ -1,5 +1,51 @@
 # Changelog
 
+## 0.4.0
+
+### Packs
+
+- `qa-testing` gana `bug-repro-loop`: mando rojo de un bug duro (comando
+  que ya falló, hipótesis, prueba de regresión). No es un 502 ni un flake.
+- `ai-agents` gana `/implement` y el patrón DAG con frontera (un worktree
+  por escritor, un colector). Si no hay aristas bloqueantes, sigue
+  `/fanout`.
+- `pr-review-checklist` gana el eje Spec (fidelidad al encargo, distinto
+  de la corrección).
+- El catálogo pasa a 53 skills y 27 prompts. Siguen once packs.
+- Se retiran del árbol los directorios vacíos `docker-hardening` y
+  `hardening-checklist`, herencia de dos fusiones anteriores.
+
+### Harness
+
+- `--alfred-pi=usage:N` acota el informe a los últimos N días. El parser
+  del rango existía desde 0.3.0, pero la guarda del valor lo dejaba
+  inalcanzable; ahora responde y tiene caso en el viaje headless.
+- La TUI deja de ofrecer referencias `!comando` al pedir una clave. El
+  resolutor siempre las rechazó, así que la etiqueta invitaba a guardar
+  una credencial que jamás resolvería.
+
+### Documentación
+
+- Pasada de contraste de los diez documentos de `docs/` y los dos README
+  contra el código 0.4.0. Se corrigen la frontera de `lib/` (falta
+  `onboarding-flow.ts` como importador de pi), el diagrama de arranque, el
+  contrato de frontmatter de los prompts y el manifiesto de pack.
+- La nota de privacidad y el apartado de seguridad dejan de decir que la
+  única salida de red es la que dispara el usuario: se nombran models.dev,
+  el registro de npm y el canal de actualizaciones.
+
+### Sitio
+
+- Cifras 53/27 en casa, changelog, `llms.txt` y las imágenes de compartir.
+- `llms.txt` y `llms.es.txt` dejan de ser una ficha de viñetas y pasan a
+  brief de producto: desambiguación de nombres, superficie de comandos,
+  las once salas con su disparador, los cinco mecanismos, qué sale a la
+  red y una lista expresa de lo que el producto no hace.
+- Docs técnicos reescritos en compilación: los enlaces `.md` ya no
+  dependen de JavaScript y las tablas anchas van envueltas.
+- Accesibilidad y paridad: enlace de salto, contraste de texto, encabezados,
+  gutter bilingüe, FAQ inglesa a la par y una sola fuente para el JSON-LD.
+
 ## 0.3.0
 
 ### El nombre

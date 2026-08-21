@@ -816,7 +816,7 @@ async function addProviderWizard(pi: ExtensionAPI, ctx: Ctx): Promise<void> {
 
   const keyDefault = preset?.keyEnv ? `$${preset.keyEnv}` : preset?.keyLiteral ?? ""
   const key = await ctx.ui.input(
-    "API key (literal, $ENV_VAR, !command, or empty for local)",
+    "API key (literal, $ENV_VAR, or empty for local)",
     keyDefault,
   )
 
@@ -1033,7 +1033,7 @@ async function setKeyFlow(pi: ExtensionAPI, ctx: Ctx, name: string, custom: Prov
     const currentCustom = models.providers[name]?.apiKey
     const currentAuth = auth[name]?.key
     const action = await pick(ctx.ui, `Key - ${name}`, [
-      { value: "set", label: "Set key…", description: "literal, $ENV_VAR, or !command" },
+      { value: "set", label: "Set key…", description: "literal or $ENV_VAR (a !command ref is rejected)" },
       { value: "check", label: "Check", description: "resolve the reference and validate" },
       ...(currentCustom || currentAuth ? [{ value: "remove", label: "Remove key", description: "" }] : []),
       { value: "back", label: "Back", description: "" },
@@ -1041,7 +1041,7 @@ async function setKeyFlow(pi: ExtensionAPI, ctx: Ctx, name: string, custom: Prov
     if (!action || action === "back") return
 
     if (action === "set") {
-      const value = await ctx.ui.input("API key (literal, $ENV_VAR or !command)", currentCustom ?? currentAuth ?? "")
+      const value = await ctx.ui.input("API key (literal or $ENV_VAR)", currentCustom ?? currentAuth ?? "")
       if (value === undefined) continue
       if (custom || models.providers[name]) {
         const next = freshModels()

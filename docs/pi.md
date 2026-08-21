@@ -105,8 +105,9 @@ pi -e <ruta|url>                       ad hoc, una sesión
 Dentro del proceso, pi aliasa `@earendil-works/pi-tui` y
 `@earendil-works/pi-coding-agent` para que la extensión importe tipos y
 componentes de TUI sin instalar nada. Por eso en este repo esos imports
-solo existen en `index.ts` y `lib/screens.ts`: el resto de `lib/` es Node
-puro y corre (y se testea) sin agente.
+solo existen en `index.ts`, `lib/screens.ts` y
+`lib/onboarding-flow.ts`: el resto de `lib/` es Node puro y corre
+(y se testea) sin agente.
 
 El punto de entrada exporta por defecto una fábrica:
 
@@ -162,7 +163,7 @@ doctor del harness sondea esto en vivo.
 | Modo | Uso | El harness en él |
 |---|---|---|
 | TUI interactivo | uso diario | pantallas completas, statusline, cabecera |
-| Print (`pi -p`) | scripts y CI | doctor/usage headless vía `--harness-moe` |
+| Print (`pi -p`) | scripts y CI | doctor/usage headless vía `--alfred-pi` (alias `--harness-moe`) |
 | RPC (JSONL por stdio) | control programático | eventos y UI de diálogo proxificados |
 | SDK | embeber | no usado por el harness |
 

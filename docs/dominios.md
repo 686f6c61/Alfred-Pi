@@ -34,7 +34,7 @@ falta `/reload`.
 | Pack | Skills | Prompts |
 |---|---|---|
 | **Security** | threat-modeling, owasp-review, sonarqube-audit, secret-scanning, dependency-audit | `/audit` `/threat-model` `/sonar` `/fix-findings` |
-| **AI agents** | agent-orchestration (fan-out, presupuestos, protocolo de merge) | `/fanout` |
+| **AI agents** | agent-orchestration (fan-out, DAG/frontera, presupuestos, protocolo de merge) | `/fanout` `/implement` |
 | **Docs** | documentation (Diátaxis), adr, api-reference | `/adr` `/docs-audit` |
 | **Spanish writing** | rae-normas, traduccion-en-es | `/revision-es` |
 | **Clean code** | solid-review, refactoring-patterns, tdd-workflow, pr-review-checklist, tech-debt-inventory, ddd-architecture | `/review-clean` `/refactor` |
@@ -43,7 +43,7 @@ falta `/reload`.
 | **Landing design** | landing-copy, visual-critique (visión), conversion-checklist, design-systems, ab-testing, seo-analytics | `/landing-review` `/landing-from-image` |
 | **DevOps / infra** | docker-workflow, github-actions, incident-triage, kubernetes-triage, observabilidad, db-ops |  `/ci` `/diagnose-502` `/infra-audit`  |
 | **Data / análisis** | sql-optimization, pandas-analysis, dashboard-design, data-quality | `/query-review` `/explore` `/dashboard` |
-| **QA / testing** | test-strategy, fixtures-factories, contract-testing, flaky-hunting | `/test-plan` `/flaky` `/coverage-gaps` |
+| **QA / testing** | test-strategy, fixtures-factories, contract-testing, flaky-hunting, bug-repro-loop | `/test-plan` `/flaky` `/coverage-gaps` |
 
 Habilitación: `/domains` (global con symlinks en `~/.pi/agent/` o por
 proyecto en `.pi/`). Al deshabilitar, el harness solo retira los enlaces
@@ -84,9 +84,12 @@ Casos de uso:
 ## AI agents
 
 Skills: **agent-orchestration** (selector de patrón sequential/fan-out/crew
-con worktrees/cadena de roles/map-reduce, brief por subagente, asignación
-de modelo por rol, disciplina de presupuesto y protocolo de merge).
-Prompt: `/fanout`. Recomendados: pi-subagents,
+con worktrees/cadena de roles/map-reduce/DAG con frontera, brief por
+subagente, asignación de modelo por rol, disciplina de presupuesto y
+protocolo de merge).
+Prompts: `/fanout`, `/implement` (grafo de tickets o spec: frontera,
+worktrees, un recolector, `/stack` y `/usage` antes de la flota).
+Recomendados: pi-subagents,
 @quintinshaw/pi-dynamic-workflows, pi-crew, @narumitw/pi-goal (objetivos
 autónomos persistentes; exige presupuesto de goal fijado, ver la nota en el
 contexto del pack), pi-memory (memoria persistente; riesgo de secretos en el
@@ -103,6 +106,8 @@ Casos de uso:
    fan-out de lecturas solo lectura y fusión de criterios.
 3. **Escritura paralela sin conflictos**: crew con un worktree por
    escritor y revisión de diffs como protocolo de merge.
+4. **Grafo de tickets**: `/implement` más un spec o lista con aristas
+   de bloqueo. Si no hay aristas, usa `/fanout`.
 
 ## Docs
 
@@ -146,8 +151,9 @@ Casos de uso:
 Skills: **solid-review** (detección de dolor real por principio, no
 dogmática), **refactoring-patterns** (movimientos con red de seguridad),
 **tdd-workflow** (rojo-verde-refactor con reglas de alcance),
-**pr-review-checklist** (revisión de PR: corrección primero, diseño y
-tests después, tamaño del diff y disciplina de veredicto),
+**pr-review-checklist** (revisión de PR: paso 0 Spec, fidelidad al
+encargo; luego corrección, diseño y tests; el eje Spec no se mezcla con
+la corrección),
 **tech-debt-inventory** (inventario de deuda con ubicación, síntoma,
 coste y estimación; prioriza por interés compuesto, no por molestia) y
 **ddd-architecture** (lenguaje ubicuo, contextos delimitados con mapa de
@@ -299,7 +305,9 @@ limpieza explícita),
 **contract-testing** (contratos consumidor-proveedor verificados en CI,
 protocolo de cambios rompientes), **flaky-hunting** (cuantificar, clasificar
 el olor, reproducir determinista, arreglar la causa; cuarentena con dueño y
-caducidad). Prompts: `/test-plan`, `/flaky`, `/coverage-gaps`.
+caducidad), **bug-repro-loop** (mando rojo determinista, hipótesis
+falsables, una sonda etiquetada y regresión; no es un 502 ni un flake).
+Prompts: `/test-plan`, `/flaky`, `/coverage-gaps`.
 Recomendados: tdd-enforcer (impone las fases rojo-verde-refactor; vivo y del
 oficio: publicación reciente y tracción suficiente para no ser cadáver). El
 resto de la oferta QA está dormida o no encaja, y no se recomienda. Hints de
@@ -313,3 +321,7 @@ Casos de uso:
    causa, nunca el reintento.
 3. **Huecos de cobertura**: `/coverage-gaps` cruza caminos críticos contra
    lo que la suite afirma hoy y lista los huecos que importan con su nivel.
+4. **Bug que resiste la primera lectura**: «este bug no se reproduce» o
+   «reproduce the bug». Construye el mando que ya ha fallado, descarta
+   hipótesis y cierra con una prueba de regresión. Si el servicio está
+   caído, es `incident-triage`; si solo falla a veces en CI, `/flaky`.

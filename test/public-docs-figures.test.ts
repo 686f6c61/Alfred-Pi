@@ -171,3 +171,26 @@ test("arquitectura_documents_curate_turn", () => {
   expect(text).toMatch(/\*\*sala\*\*:/)
   expect(text).toMatch(/\*\*intención\*\*:/)
 })
+
+test("public_docs_name_the_canonical_flag_and_statusline", () => {
+  const comandos = read("docs/comandos.md")
+  expect(comandos).toMatch(/## Flag `--alfred-pi`/)
+  expect(comandos).toMatch(/`alfred-sala`/)
+  expect(comandos).not.toMatch(/`moe-domain`/)
+  const arquitectura = read("docs/arquitectura.md")
+  expect(arquitectura).toMatch(/flag --alfred-pi/)
+  expect(arquitectura).toMatch(/alfred-sala/)
+  const instalacion = read("docs/instalacion.md")
+  expect(instalacion).toMatch(/migrated-from\.json/)
+})
+
+test("readme_and_changelog_name_implement_and_bug_repro_loop", () => {
+  expect(read("README.md")).toMatch(/\/implement/)
+  expect(read("README.md")).toMatch(/bug-repro-loop/)
+  expect(read("README.en.md")).toMatch(/\/implement/)
+  expect(read("README.en.md")).toMatch(/bug-repro-loop/)
+  expect(read("CHANGELOG.md")).toMatch(/^## 0\.4\.0/m)
+  expect(read("docs/dominios.md")).toMatch(/\/implement/)
+  expect(read("docs/dominios.md")).toMatch(/bug-repro-loop/)
+  expect(read("docs/probar.md")).toMatch(/now-matt-skills/)
+})

@@ -18,9 +18,11 @@ completa.
 pi install git:github.com/686f6c61/Alfred-Pi
 ```
 
-Qué toca: descarga el árbol de la etiqueta al almacén de paquetes de pi y
-añade la fuente a `packages` en `~/.pi/agent/settings.json`. No modifica
+Qué toca: descarga el árbol al almacén de paquetes de pi y añade la
+fuente a `packages` en `~/.pi/agent/settings.json`. No modifica
 `models.json`, `auth.json` ni crea estado propio hasta que tú lo hagas.
+npm aún no se publica; la vía git es la canónica. Versión vigente:
+0.4.0.
 
 ### Vía 2: probar sin instalar
 
@@ -56,8 +58,14 @@ lo deja en `deferred`; cuando ya hay casa, no vuelve. Si ya tienes
 proveedores, ves la cabecera y los comandos (`/providers`, `/stack`,
 etc.).
 
+Si vienes de 0.2.x, el primer arranque copia
+`~/.pi/agent/pi-harness-moe/` a `~/.pi/agent/alfred-pi/` cuando el
+directorio nuevo no existe, deja `migrated-from.json` y no borra el
+origen. Los archivos nativos de pi no se tocan.
+
 Referencia de cada comando y del flag headless:
-[comandos.md](comandos.md).
+[comandos.md](comandos.md). El canónico es `--alfred-pi`.
+`--harness-moe` sigue respondiendo en 0.4.0 y el doctor avisa.
 
 ## Configuración inicial
 
@@ -67,7 +75,9 @@ Referencia de cada comando y del flag headless:
    `GET /models`, rellena metadatos desde models.dev (solo campos vacíos) y
    muestra el diff antes de escribir.
 2. **Clave**: literal o `$ENV_VAR` (recomendado). El prefijo `!` se
-   rechaza: el harness no ejecuta un comando para obtener secretos.
+   rechaza al resolver (`resolveKeyRef`): el harness no ejecuta un
+   comando para obtener secretos. El diálogo de alta aún menciona
+   `!command` en el texto de ayuda; si lo escribes, falla.
    Siempre enmascarada en pantalla. `/providers` → provider → *API key*
    o *Keys & auth*.
 3. **Defaults**: provider, modelo y nivel de pensamiento; se aplican en vivo

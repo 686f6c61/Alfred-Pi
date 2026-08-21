@@ -1,10 +1,13 @@
 ---
-description: Patterns for orchestrating pi agents - when to go sequential vs fan-out vs crew-with-worktrees, role/model assignment, briefs, budgets and merging. Use when delegating to subagents, running parallel agents, or designing multi-agent workflows.
+description: Patterns for orchestrating pi agents - when to go sequential vs fan-out vs crew-with-worktrees, role/model assignment, briefs, budgets and merging. Use when delegating to subagents, running parallel agents, designing multi-agent workflows, or executing a ticket graph with blocking edges.
 origin: original
 license: MIT
 ---
 
 # Agent Orchestration
+
+Pick the pattern, write briefs, estimate cost, merge with one collector.
+The deliverable is a named pattern, per-role briefs, and a merge report.
 
 ## Pattern picker
 
@@ -15,6 +18,7 @@ license: MIT
 | Parallel *writes* to one repo | **Crew with worktrees** | pi-crew (one worktree per writer) |
 | Pipeline with stages (explore → spec → implement → verify) | **Role chain** | pi-subagents scripted workflows |
 | Huge search/synthesis (100s of units) | **Map-reduce** | @quintinshaw/pi-dynamic-workflows |
+| Tickets with blocking edges; one PR | **DAG / frontier** | pi-crew worktrees + one collector; `/implement` |
 
 Rules of thumb: fan-out pays off when units × per-unit context ≫ your context,
 or when latency matters more than tokens. If tasks share 80% of their context,
@@ -63,6 +67,16 @@ Constraints: read-only unless explicitly granted write; budget note if relevant.
 - Provider failing repeatedly (check /stack health) → switch models before
   relaunching, not after N failures.
 
+## DAG / frontier
+
+Compute the frontier (tickets with no unmet blocker) after every
+collector merge; never let two writers land on the same file; resolve
+hunks by the ticket's stated intent, not by whoever pushed last. No
+edges means this is fan-out, not a DAG. Check `/usage` before the fleet.
+This skill does not slice a conversation into tickets. Red-green per
+ticket is **tdd-workflow**.
+
 Anti-patterns: fanning out to "speed up" a 2-step task; agents editing the
 same file; nested fan-outs without budget math; using subagents to avoid
-reading 200 lines yourself.
+reading 200 lines yourself; launching a DAG fleet when there are no
+blocking edges.

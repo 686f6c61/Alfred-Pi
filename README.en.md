@@ -12,7 +12,7 @@
 ```
 
 **The control center for [pi](https://pi.dev): a product harness, not a terminal toy.**
-A harness.moe product · built by @686f6c61 · v0.3.0 · MIT · tests with bun · 0 dependencies
+A harness.moe product · built by @686f6c61 · v0.4.0 · MIT · tests with bun · 0 dependencies
 
 ## What's inside (free, MIT)
 
@@ -44,8 +44,8 @@ and is not published.
 
 1. **The radar (autopilot).** Type "audit this repo's security" and the
    house picks a pack on its own: security context injected, a badge in the
-   footer, auditing skills within the model's reach. 11 packs, 52 skills,
-   26 prompts, zero menus.
+   footer, auditing skills within the model's reach. 11 packs, 53 skills,
+   27 prompts, zero menus.
 2. **The budget guardian.** A $/day cap: warning at 80%, frugality mode at
    100%. It reads your local sessions and warns you; it never blocks you or
    sends data anywhere.
@@ -135,7 +135,7 @@ your models.
 | `/persona` | Alfred or neutral |
 | `/domains` | Packs per project or global |
 | `/profile` | Profiles with relay |
-| `/essentials` | Claude Code parity (curated, audited packages) |
+| `/essentials` | Parity with the big agents (curated, audited packages) |
 | `/packages` | Ecosystem browser. Audit on essentials; the search browser is catching up. |
 | `/usage` | Cost and daily budget |
 | `/ollama` | Local and cloud models |
@@ -151,7 +151,7 @@ Headless: `pi --alfred-pi=doctor` and `pi --alfred-pi=usage` (also
 | Pack | Skills | Prompts |
 |---|---|---|
 | **Security** | threat-modeling, owasp-review, sonarqube-audit, secret-scanning, dependency-audit | `/audit` `/threat-model` `/sonar` `/fix-findings` |
-| **AI agents** | agent-orchestration (fan-out, budgets, merge protocol) | `/fanout` |
+| **AI agents** | agent-orchestration (fan-out, DAG/frontier, budgets, merge protocol) | `/fanout` `/implement` |
 | **Docs** | documentation (Diátaxis), adr, api-reference | `/adr` `/docs-audit` |
 | **Spanish writing** | rae-normas, traduccion-en-es | `/revision-es` |
 | **Clean code** | solid-review, refactoring-patterns, tdd-workflow, pr-review-checklist, tech-debt-inventory, ddd-architecture | `/review-clean` `/refactor` |
@@ -160,7 +160,7 @@ Headless: `pi --alfred-pi=doctor` and `pi --alfred-pi=usage` (also
 | **Landing design** | landing-copy, visual-critique (vision), conversion-checklist, design-systems, ab-testing, seo-analytics | `/landing-review` `/landing-from-image` |
 | **DevOps / infra** | docker-workflow, github-actions, incident-triage, kubernetes-triage, observabilidad, db-ops | `/ci` `/diagnose-502` `/infra-audit` |
 | **Data / analysis** | sql-optimization, pandas-analysis, dashboard-design, data-quality | `/query-review` `/explore` `/dashboard` |
-| **QA / testing** | test-strategy, fixtures-factories, contract-testing, flaky-hunting | `/test-plan` `/flaky` `/coverage-gaps` |
+| **QA / testing** | test-strategy, fixtures-factories, contract-testing, flaky-hunting, bug-repro-loop | `/test-plan` `/flaky` `/coverage-gaps` |
 
 Enable per project or globally; disabling removes only the links this house
 created. House rules: RAE-grade Spanish in the Spanish surface, zero emojis,
@@ -176,8 +176,10 @@ Everything lives in pi's native files (`~/.pi/agent/models.json`, `auth.json`,
 ## Security
 
 Zero runtime dependencies; keys always masked; writes with diff, backup and
-atomic rename; advisory pre-install audit on essentials; outbound network
-limited to what you trigger. Full policy in [SECURITY.md](SECURITY.md).
+atomic rename; advisory pre-install audit on essentials. The budget never
+leaves your disk. There is house network (models.dev, npm, the update
+channel); the detail is in [datos-y-config.md](docs/datos-y-config.md).
+Failure policy in [SECURITY.md](SECURITY.md).
 
 ## Development
 

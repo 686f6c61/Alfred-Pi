@@ -64,9 +64,9 @@ en la documentación y ninguno de esos identificadores se renombra.
    presupuesto modula; nada detiene un turno en silencio.
 4. **Curación entre turnos.** El relevo de modelos y los cambios de estado
    pesados ocurren en `before_agent_start`, nunca en mitad de un stream.
-5. **Frontera lib/ pura.** Los módulos de `lib/` no importan nada de pi;
-   solo `index.ts` y `screens.ts` usan la API de extensión. Eso mantiene
-   los tests autónomos (corren con bun, sin agente).
+5. **Frontera lib/ pura.** Los módulos de `lib/` no importan nada de pi
+   salvo `screens.ts` y `onboarding-flow.ts`. `index.ts` es el adaptador.
+   Eso mantiene los tests autónomos (corren con bun, sin agente).
 
 ## Proceso y carga
 
@@ -81,15 +81,18 @@ Secuencia de arranque del harness en cada sesión:
 pi arranca
    │
    ├─ jiti carga index.ts del paquete instalado
-   │     └─ registra 11 comandos + flag --harness-moe
-   │         (doctor, usage, stack, autopilot, domains; variantes :json)
+   │     └─ registra 11 comandos + flag --alfred-pi
+   │         (alias deprecado --harness-moe; doctor, usage, stack,
+   │          autopilot, domains; variantes :json)
    │
    ▼
 session_start
-   ├─ flag headless? ──sí──▶ doctor/usage a stdout y fuera
-   ├─ TUI? ──sí──▶ cabecera de producto + statusline (moe)
+   ├─ flag --alfred-pi? ──print──▶ doctor/usage/stack/autopilot/domains
+   │                              a stdout (la sesión no se cierra)
+   ├─ TUI y sin casa? ──sí──▶ asistente de primer arranque
+   ├─ TUI? ──sí──▶ cabecera de producto + statusline (alfred)
    ├─ reset del marcador de persona (una vez por sesión)
-   └─ update-check (fire-and-forget, caché 24 h)
+   └─ update-check (fire-and-forget a pi.686f6c61.dev, caché 24 h)
    │
    ▼
 primer prompt ──▶ before_agent_start ──▶ bucle del agente
@@ -127,7 +130,7 @@ primer prompt ──▶ before_agent_start ──▶ bucle del agente
 └──────────────────────────────────────────────────────────────┘
       │
       ▼
- model_select / fin de turno ──▶ statusline: moe · moe-domain · moe-budget
+ model_select / fin de turno ──▶ statusline: alfred · alfred-sala · alfred-presupuesto
 ```
 
 ## Máquina de estados: failover
@@ -158,7 +161,7 @@ se limpia para que recupere su turno más adelante.
  gasto del día (sesiones locales × precios de models.json)
         │
         ▼
-   [< 80%] ──ok──▶ statusline "budget N% of $X"
+   [< 80%] ──ok──▶ statusline «Presupuesto: N % de X USD»
         │
    [≥ 80%] ──▶ aviso una sola vez al día (warnedOn)
         │
@@ -202,7 +205,7 @@ cadenas en las pantallas.
    │    (Dockerfile,      │  por pack    │
    │    sonar-project…)   │              │
    └──────────┬───────────┘              │
-        hay ganador ──sí────────────────┤
+        hay ganador ──sí─────────────────┤
               │ no                       │
               ▼                          │
    ┌──────────────────────┐              │
@@ -244,7 +247,9 @@ cambian lo que el desarrollador ve:
   muerto. Es informativo; no bloquea `pi install`.
 
 El generador `generateDocsSite` convierte los markdown públicos en
-HTML y salta `docs/auditoria/`. No duplica contenido a mano.
+HTML bajo `site/` (canal de actualizaciones) y salta
+`docs/auditoria/`. El sitio de producto es Astro en `www/` (rama
+`landing`). No duplica contenido a mano.
 
 ## Persona: doble vehículo
 
@@ -322,6 +327,8 @@ stream duplica efectos).
 
 ## Frontera de pruebas
 
-Tests con bun, sin agente: la frontera lib/ pura lo permite. CI añade
-dos regresiones nacidas de bugs reales: despacho de comandos (los handlers
-toman `(args, ctx)`) y el guardián de imports sin exportar.
+El gate es `bun test` del harness, sin agente: la frontera lib/ pura lo
+permite. CI añade dos regresiones nacidas de bugs reales: despacho de
+comandos (los handlers toman `(args, ctx)`) y el guardián de imports
+sin exportar. El check de Astro (`www/`) no sustituye a esa batería.
+Mapa y how-to: [probar.md](probar.md).

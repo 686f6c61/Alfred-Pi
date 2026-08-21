@@ -37,6 +37,13 @@
     "dag",
     "worktree",
     "agentes en paralelo",
-    "varios agentes"
+    "varios agentes",
+    "grafo de tickets",
+    "ticket graph",
+    "blocking tickets",
+    "tickets bloqueantes",
+    "worktree por agente",
+    "frontera de tickets",
+    "ticket frontier"
   ]
 }

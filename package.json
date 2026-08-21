@@ -1,6 +1,6 @@
 {
   "name": "alfred-pi",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Alfred-Pi: control center for the pi coding agent. Providers, doctor, domain packs, budget and relay. A product of harness.moe.",
   "type": "module",
   "keywords": [

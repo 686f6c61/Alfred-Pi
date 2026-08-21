@@ -12,7 +12,7 @@
 ```
 
 **El centro de control para [pi](https://pi.dev): un harness de producto, no un juguete de terminal.**
-Un producto de harness.moe · desarrollado por @686f6c61 · v0.3.0 · MIT · tests con bun · 0 dependencias
+Un producto de harness.moe · desarrollado por @686f6c61 · v0.4.0 · MIT · tests con bun · 0 dependencias
 
 ## Lo que hay dentro (gratis, MIT)
 
@@ -43,7 +43,7 @@ no se sube en `main`). `docs/auditoria/` es taller interno y no se publica.
 1. **El radar (autopilot).** Escribes «audita la seguridad de este repo»
    y la casa elige pack sola: contexto de seguridad inyectado, insignia
    en el pie, skills de auditoría al alcance del modelo. 11 packs,
-   52 skills, 26 prompts, cero menús.
+   53 skills, 27 prompts, cero menús.
 2. **El guardián del presupuesto.** Tope $/día: aviso al 80 %, modo
    frugalidad al 100 %. Lee tus sesiones locales y te avisa; no te corta ni
    envía datos a ningún sitio.
@@ -155,7 +155,7 @@ Referencia completa con casos de uso de cada pack en [docs/dominios.md](docs/dom
 | Pack | Skills | Prompts |
 |---|---|---|
 | **Seguridad** | threat-modeling, owasp-review, sonarqube-audit, secret-scanning, dependency-audit | `/audit` `/threat-model` `/sonar` `/fix-findings` |
-| **Agentes IA** | agent-orchestration (fan-out, presupuestos, protocolo de merge) | `/fanout` |
+| **Agentes IA** | agent-orchestration (fan-out, DAG/frontera, presupuestos, protocolo de merge) | `/fanout` `/implement` |
 | **Docs** | documentation (Diátaxis), adr, api-reference | `/adr` `/docs-audit` |
 | **Escritura (ES)** | rae-normas, traduccion-en-es | `/revision-es` |
 | **Código limpio** | solid-review, refactoring-patterns, tdd-workflow, pr-review-checklist, tech-debt-inventory, ddd-architecture | `/review-clean` `/refactor` |
@@ -164,7 +164,7 @@ Referencia completa con casos de uso de cada pack en [docs/dominios.md](docs/dom
 | **Landing design** | landing-copy, visual-critique (visión), conversion-checklist, design-systems, ab-testing, seo-analytics | `/landing-review` `/landing-from-image` |
 | **DevOps / infra** | docker-workflow, github-actions, incident-triage, kubernetes-triage, observabilidad, db-ops | `/ci` `/diagnose-502` `/infra-audit` |
 | **Data / análisis** | sql-optimization, pandas-analysis, dashboard-design, data-quality | `/query-review` `/explore` `/dashboard` |
-| **QA / testing** | test-strategy, fixtures-factories, contract-testing, flaky-hunting | `/test-plan` `/flaky` `/coverage-gaps` |
+| **QA / testing** | test-strategy, fixtures-factories, contract-testing, flaky-hunting, bug-repro-loop | `/test-plan` `/flaky` `/coverage-gaps` |
 
 Habilitar por proyecto o en global; al deshabilitar solo se retiran los enlaces
 creados por la casa. Normas de la casa: español RAE, cero emojis, sin raya
@@ -183,8 +183,11 @@ técnica](docs/datos-y-config.md#nota-de-privacidad-técnica).
 ## Seguridad
 
 Cero dependencias en runtime; claves siempre enmascaradas; escrituras con diff,
-backup y atómica; auditoría pre-instalación advisory en esenciales; salida de
-red acotada a lo que tú disparas. Política completa en [SECURITY.md](SECURITY.md).
+backup y atómica; auditoría pre-instalación advisory en esenciales. El
+presupuesto no sale de tu disco. Hay red propia (models.dev, npm, canal de
+actualizaciones); el detalle está en
+[datos-y-config.md](docs/datos-y-config.md). Política de fallos en
+[SECURITY.md](SECURITY.md).
 
 ## Desarrollo
 

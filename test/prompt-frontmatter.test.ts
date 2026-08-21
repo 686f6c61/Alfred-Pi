@@ -29,7 +29,7 @@ for (const pack of readdirSync(packsRoot)) {
 }
 
 test("all_prompts_use_valid_frontmatter_keys", () => {
-  expect(prompts.length).toBe(26)
+  expect(prompts.length).toBe(27)
 
   const invalid: string[] = []
   const missingHint: string[] = []

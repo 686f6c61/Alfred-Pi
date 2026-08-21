@@ -6,7 +6,7 @@
  *   /providers:doctor  health checks + config reconciliation
  *   /profile           quick model-profile switching
  *   /domains           work-area packs (skills, prompts, injected context)
- *   --alfred-pi doctor  headless doctor report (--harness-moe still aliases)
+ *   --alfred-pi doctor  headless doctor report (--harness-moe still aliases, deprecated)
  */
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent"
 import { getBaseDir, findRepoRoot } from "./lib/paths.ts"
@@ -143,15 +143,15 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
   })
 
   // -------------------------------------------------------------------------
-  // Headless flag: pi --alfred-pi=doctor. --harness-moe remains an alias in 0.3.x.
+  // Headless flag: pi --alfred-pi=doctor. --harness-moe remains a deprecated alias.
 
   pi.registerFlag("alfred-pi", {
     type: "string",
-    description: "Alfred-Pi actions: doctor, usage, stack, autopilot, domains",
+    description: "Alfred-Pi actions: doctor, usage[:days], stack, autopilot, domains (:json variants)",
   })
   pi.registerFlag("harness-moe", {
     type: "string",
-    description: "Deprecated alias of --alfred-pi (removed in 0.4.0)",
+    description: "Deprecated alias of --alfred-pi",
   })
 
   // -------------------------------------------------------------------------
@@ -200,8 +200,9 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
         } else if (ctx.ui) {
           await ctx.ui.notify(lines.slice(0, 3).join(" · "), "info")
         }
-      } else if (value === "usage") {
-        const range = /:(\d+)$/.exec(flag.trim()) ? /:(\d+)$/.exec(flag.trim())![1] : "all"
+      } else if (value === "usage" || /^usage:\d+$/.test(value)) {
+        // usage:N acota el informe a los últimos N días; usage a secas los cubre todos.
+        const range = /^usage:(\d+)$/.exec(value)?.[1] ?? "all"
         if (ctx.mode === "print") {
           process.stdout.write(headlessUsage(range).join("\n") + "\n")
         } else if (ctx.ui) {

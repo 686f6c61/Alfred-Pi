@@ -1,7 +1,8 @@
 # Cómo probar un cambio
 
 How-to del arnés de pruebas. Los tests corren con bun, sin instalar pi
-y sin red. Si un cambio de `lib/` no tiene test, no está listo.
+y sin red. Si un cambio de `lib/` no tiene test, no está listo. El
+gate es `bun test` del harness: el check de Astro no lo sustituye.
 
 ## Arranque
 
@@ -27,10 +28,11 @@ prohíbe un entero «N tests».
 | `test/*.test.ts` junto a un módulo | Unidad de `lib/` (`config-io`, `prober`, `autopilot`, `curate-turn`, …) |
 | `test/coverage-*.test.ts` | Ramas y errores que el archivo principal no pisaba |
 | `test/siguiente-*.test.ts` | Cubo Siguiente: intenciones, watchdog, docs-site, memoria, local-first, house-copy, recibos de auditoría |
+| `test/now-matt-skills.test.ts` | 0.4.0: `bug-repro-loop`, `/implement`, DAG y eje Spec |
 | `test/journeys/` | Viajes de TUI con UI falsa (`ScriptedUi`): alta de proveedor, doctor, packs, onboarding, flag headless |
 | `test/helpers/scripted-ui.ts` | Doble de `ctx.ui` y de `ExtensionAPI` para esos viajes |
 | `test/index-contract.test.ts` | Eventos `session_start`, `before_agent_start`, `after_provider_response` contra un pi falso |
-| Guardianes | Fronteras y cifras que no pueden volver a romperse |
+| Guardianes | Fronteras y cifras que no pueden volver a romperse. `www-site.test.ts` cubre el sitio, no sustituye al harness |
 
 Cada test de integración apunta `PI_CODING_AGENT_DIR` a un directorio
 temporal. `findRepoRoot` sigue resolviendo este repositorio (hace falta
@@ -60,7 +62,7 @@ Una captura mental de «se ve bien» no cuenta.
 | Test | Invariante |
 |---|---|
 | `public-docs-figures.test.ts` | README: 11 packs, skills y prompts del árbol, presets del array, `bun test` sin entero copiado. Glosario de arquitectura. Índice dice 11 packs |
-| `pack-origin-license.test.ts` | Cada `SKILL.md` y prompt declara `origin` y `license`. Recuento actual 74 (48+26) |
+| `pack-origin-license.test.ts` | Cada `SKILL.md` y prompt declara `origin` y `license`. Recuento actual 80 (53+27) |
 | `pack-recommended-alive.test.ts` | Los `packages` de cada manifiesto no resucitan cadáveres vetados |
 | `lib-import-guardians.test.ts` | Solo `screens.ts` y `onboarding-flow.ts` importan paquetes de pi. Autopilot y persona no importan `planWrites` |
 | `exports.test.ts` | Imports usados |

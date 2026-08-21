@@ -10,7 +10,8 @@ Fan out this task across agents: $@
 
 Apply the agent-orchestration skill:
 1. Decompose the task; name the pattern (sequential / fan-out / crew-worktree
-   / role chain / map-reduce) and justify it in one line.
+   / role chain / map-reduce / DAG) and justify it in one line. If the work
+   already has blocking edges, use `/implement` instead.
 2. Check `/stack` health and the budget before committing; show the
    cost estimate (units × per-unit cost from the usage table).
 3. Write the brief per subagent (goal, scope, inputs, output format).

@@ -31,15 +31,23 @@ sigue inyectando el contexto de **un** pack por turno. Tras repartir o
 habilitar skills nuevas hace falta `/reload` para que pi redescubra el
 menú.
 
-## Flag `--harness-moe`
+Los slash de pack (`/audit`, `/fanout`, `/implement`, `/flaky`, …) **no**
+se registran en `index.ts`. pi los descubre al habilitar el pack. El
+catálogo vive en [dominios.md](dominios.md). En 0.4.0: `/implement`
+(grafo o spec) y la skill `bug-repro-loop` (mando rojo; no es un
+comando slash).
 
-Registrado como string. En print (`pi -p --no-session`) escribe a
-stdout y no abre TUI. Valores que el arranque reconoce:
+## Flag `--alfred-pi`
+
+Canónico. String. En print (`pi -p --no-session`) escribe a stdout y no
+abre TUI. `--harness-moe` es alias deprecado: en 0.4.0 sigue
+respondiendo y el doctor avisa. Valores que el arranque reconoce:
 
 | Valor | Salida |
 |---|---|
 | `doctor` | Informe de texto del doctor |
-| `usage` | Informe de uso y coste |
+| `usage` | Informe de uso y coste de todo el historial |
+| `usage:N` | El mismo informe acotado a los últimos N días |
 | `stack` | Torre de control en texto |
 | `stack:json` | La misma torre en JSON |
 | `autopilot` y `autopilot:json` | `{enabled, routing, lastDomainId}` |
@@ -50,9 +58,17 @@ Ejemplo:
 ```sh
 pi --alfred-pi=doctor --no-session -p "ok"
 pi --alfred-pi=stack:json --no-session -p "ok"
+pi --alfred-pi=usage:7 --no-session -p "ok"
 ```
 
-Un valor desconocido se ignora: la sesión sigue.
+El sufijo con dos puntos cambia de oficio según el valor: en `stack`,
+`autopilot` y `domains` elige formato (`:json`); en `usage` acota la
+ventana temporal en días. Es la única asimetría del flag y conviene
+recordarla al leer un script ajeno.
+
+Un valor desconocido se ignora y la sesión sigue. Esa tolerancia es
+deliberada: un flag mal escrito en un pipeline de CI no debe tumbar la
+sesión del agente, solo dejar de imprimir el informe que se esperaba.
 
 ## Statusline
 
@@ -60,9 +76,9 @@ En TUI el harness escribe tres claves, nunca el resto del pie de pi:
 
 | Clave | Contenido |
 |---|---|
-| `moe` | `provider/id` y, si falta credencial, `key` |
-| `moe-domain` | `Sala activa: <id>` o `sin sala` (lengua de `house-copy.ts`) |
-| `moe-budget` | `Presupuesto: N % de X USD` cuando hay tope |
+| `alfred` | `provider/id` y, si falta credencial, el sufijo de aviso más `key` |
+| `alfred-sala` | `Sala activa: <id>` o `sin sala` (lengua de `house-copy.ts`) |
+| `alfred-presupuesto` | `Presupuesto: N % de X USD` cuando hay tope |
 
 El relevo avisa con `relevoAviso` («no responde: paso a tu reserva»).
 Habilitar todos los packs usa la etiqueta `Habilitar todas las salas`.

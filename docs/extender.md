@@ -25,15 +25,18 @@ Un pack es un directorio `packs/<id>/` con este contrato:
 
 ```
 packs/<id>/
-  domain.json      manifiesto (id, name, description, triggers, repoHints?, packages?)
+  domain.json      manifiesto (id, name, description, version, triggers,
+                   repoHints?, packages?, recommended?)
   context.md       postura inyectada; techo ~15 líneas; test del borrado
   skills/<nombre>/SKILL.md
   prompts/<nombre>.md
+  profile.json     opcional; lo lee discoverDomains y hoy ningún pack lo usa
 ```
 
 `id` del manifiesto coincide con el nombre del directorio.
 `discoverDomains` ignora carpetas que empiezan por punto y omite el
-pack si falta `domain.json` o `SKILL.md` ilegible.
+pack si falta `domain.json` o `SKILL.md` ilegible. Lee también un
+`profile.json` opcional; hoy ningún pack lo usa.
 
 ### `domain.json`
 
@@ -42,8 +45,9 @@ pack si falta `domain.json` o `SKILL.md` ilegible.
 | `id`, `name`, `description` | Identidad. `name` ordena el empate alfabético del radar |
 | `triggers` | Palabras o locuciones ES/EN. Coincidencia de palabra completa, insensible a mayúsculas. Peso `min(3, ceil(longitud / 6))` |
 | `repoHints` | Ficheros o globs con un solo `*` en el último segmento. Solo se miran si ningún trigger casa, y solo en la raíz del cwd |
+| `version` | Semver editorial del pack (los once manifiestos lo declaran) |
 | `packages` | Recomendados vivos. Si el cuerpo de una skill cita un paquete que aquí no está, es un error de higiene |
-| `recommended.thinkingLevel` | Se aplica solo con routing `context+thinking` |
+| `recommended` | `{ provider?, model?, thinkingLevel? }`. `thinkingLevel` se aplica solo con routing `context+thinking` |
 
 Los triggers se curan como código. Una palabra genérica (`server`,
 `captura`, `documentar`) choca con otra sala. El empate a puntos lo
@@ -51,6 +55,9 @@ gana el pack cuyo `name` va antes en localeCompare: «DevOps / Infra»
 gana a «Web / Fullstack» a igualdad.
 
 No se crea un duodécimo pack sin oficio que las once salas no cubran.
+El grafo de tickets vive en `ai-agents` (`/implement`, DAG y frontera).
+El bug duro vive en `qa-testing` (`bug-repro-loop`). El eje Spec vive
+en `pr-review-checklist`. No se inventa una sala por cada patrón.
 
 ### `context.md`
 
@@ -99,10 +106,13 @@ guardián de origin/license se mueve con el árbol.
 
 ### Prompt (`prompts/<nombre>.md`)
 
-Frontmatter con `origin` y `license`. El nombre del fichero, sin
-extensión, es el slash-command que pi descubre cuando el pack está
-habilitado (`/audit`, `/guide`, …). No se duplica una skill con un
-prompt que cuenta lo mismo.
+Frontmatter con `origin` y `license`. El test
+`prompt-frontmatter.test.ts` admite solo `name`, `description`,
+`argument-hint`, `origin` y `license`. `argumentHint` (camelCase) está
+vetado. Si el cuerpo usa `$@`, hace falta `argument-hint`. El nombre
+del fichero, sin extensión, es el slash-command que pi descubre cuando
+el pack está habilitado (`/audit`, `/implement`, `/guide`, …). No se
+duplica una skill con un prompt que cuenta lo mismo.
 
 ## Añadir un preset
 

@@ -27,7 +27,7 @@ function frontmatter(path: string): string {
 
 test("pack_files_declare_origin_and_license", () => {
   const files = walk(root).sort()
-  expect(files.length, "expected 52 SKILL.md + 26 prompts under packs/").toBe(78)
+  expect(files.length, "expected 53 SKILL.md + 27 prompts under packs/").toBe(80)
   for (const file of files) {
     const fm = frontmatter(file)
     const name = relative(root, file)

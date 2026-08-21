@@ -8,8 +8,9 @@ de un entero copiado. How-to: [extender.md](extender.md) y
 
 ## index.ts (entry)
 
-Registra los 11 comandos y el flag `--harness-moe` (doctor, usage,
-stack, autopilot, domains; variantes `:json`). Engancha:
+Registra los 11 comandos y el flag `--alfred-pi` (doctor, usage,
+stack, autopilot, domains; variantes `:json`). `--harness-moe` es
+alias deprecado y en 0.4.0 sigue respondiendo. Engancha:
 
 - `session_start`: flag headless, asistente de primer arranque, cabecera,
   statusline, update-check.

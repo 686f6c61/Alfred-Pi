@@ -69,6 +69,11 @@ test("headless: doctor and usage print their text reports", async () => {
 
   const usage = await runHeadless("usage")
   expect(usage).toContain("Alfred-Pi usage")
+  expect(usage).toContain("all time")
+
+  // usage:N acota la ventana; sin sufijo el informe cubre todo el historial.
+  const ranged = await runHeadless("usage:7")
+  expect(ranged).toContain("Alfred-Pi usage - last 7 days")
 })
 
 test("headless: stack prints text and stack:json prints valid JSON", async () => {

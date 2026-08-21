@@ -32,6 +32,14 @@ generador de sitio lo excluye.
 
 Cifras (11 packs, skills, prompts, presets) salen del árbol, no de un
 entero copiado. El test `public-docs-figures` vigila README e índice.
+El recuento vigente es 53 skills y 27 prompts (0.4.0).
 
-HTML estático: `bun scripts/build-docs-site.ts` escribe `site/`. La
-auditoría interna no se publica.
+El gate de un cambio de `lib/` o `index.ts` es `bun test` del harness,
+sin pi. El sitio de producto (Astro, `www/`, rama `landing`) se
+verifica aparte y no sustituye esa batería. How-to:
+[probar.md](probar.md). Relato de versiones:
+[CHANGELOG.md](../CHANGELOG.md).
+
+HTML plano de respaldo: `bun scripts/build-docs-site.ts` escribe
+`site/` (canal de actualizaciones). La auditoría interna no se
+publica.

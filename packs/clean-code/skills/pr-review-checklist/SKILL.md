@@ -1,5 +1,5 @@
 ---
-description: Pull request review with a fixed order (correctness, design, tests, hidden effects, readability), diff-fetching mechanics and verdict discipline. Use when reviewing a PR, diff or merge request before merging.
+description: Pull request review with a fixed order (spec fidelity, correctness, design, tests, hidden effects, readability), diff-fetching mechanics and verdict discipline. Use when reviewing a PR, diff or merge request before merging.
 origin: original
 license: MIT
 ---
@@ -21,6 +21,11 @@ anchored in the diff. Correctness first; style never blocks.
 
 ## The checklist, in order of what hurts
 
+0. **Spec / fidelity to the request**: does the diff do what the PR
+   description, issue or spoken request asked, and no more? Report
+   missing, partial, or scope creep in its **own** section. If there is
+   no spec, say so and do not block on that alone. Never mix Spec
+   findings with correctness.
 1. **Correctness**: does it do what it claims, and what breaks when it does
    not? Trace the changed paths with a hostile eye: edge cases, error
    paths, concurrency, empty/null inputs, off-by-ones. Bugs beat style.
@@ -38,6 +43,8 @@ anchored in the diff. Correctness first; style never blocks.
 ## Output format
 
 - Verdict first: `approve` or `request changes`.
+- Spec: `missing | partial | scope creep`, with a diff anchor, in its
+  own section, before numbered change requests.
 - Each request numbered and anchored: `1. file:line - what breaks - the
   change that fixes it`.
 - Nitpicks labeled `nit:` and never blocking.
@@ -57,6 +64,8 @@ anchored in the diff. Correctness first; style never blocks.
 - Blocking on taste (naming preferences, brace style) dressed as defects.
 - Commenting top to bottom line by line and missing the design question.
 - Demanding tests for glue code while ignoring an untested failure path.
+- Mixing Spec / fidelity findings into the correctness list so scope
+  creep hides as a "bug".
 
 ## Limits
 
