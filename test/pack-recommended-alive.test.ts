@@ -5,7 +5,8 @@ import { join } from "node:path"
 // S-REC-02: los seis recomendados retirados por muertos en N-PCK-01 no pueden
 // reaparecer en ningún pack, y los añadidos de P-24 (plannotator en
 // clean-code, pi-memory en ai-agents) deben estar donde el contrato manda.
-const root = join(import.meta.dir, "..", "packs")
+const repoRoot = join(import.meta.dir, "..")
+const root = join(repoRoot, "packs")
 
 const dead = [
   "@realvendex/pi-ci",
@@ -77,6 +78,26 @@ test("rejected_memory_packages_stay_out", () => {
 test("plannotator_is_recommended_by_clean_code", () => {
   const packs = packPackages()
   expect(packs.get("clean-code") ?? []).toContain("@plannotator/pi-extension")
+})
+
+test("ponytail_is_recommended_by_clean_code", () => {
+  const packs = packPackages()
+  expect(packs.get("clean-code") ?? []).toContain("@dietrichgebert/ponytail")
+})
+
+test("ponytail_and_new_essentials_stay_in_public_catalog_texts", () => {
+  const cleanCodeContext = readFileSync(join(root, "clean-code", "context.md"), "utf8")
+  expect(cleanCodeContext).toContain("@dietrichgebert/ponytail")
+  expect(cleanCodeContext).toContain("/packages")
+
+  const dominios = readFileSync(join(repoRoot, "docs", "dominios.md"), "utf8")
+  expect(dominios).toContain("@dietrichgebert/ponytail")
+
+  const changelog = readFileSync(join(repoRoot, "CHANGELOG.md"), "utf8")
+  expect(changelog).toMatch(/^## 0\.4\.0$/m)
+  expect(changelog).toContain("pi-context-view")
+  expect(changelog).toContain("@narumitw/pi-btw")
+  expect(changelog).toContain("@dietrichgebert/ponytail")
 })
 
 test("pi_memory_is_recommended_by_ai_agents", () => {

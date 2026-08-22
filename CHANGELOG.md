@@ -4,6 +4,9 @@
 
 ### Packs
 
+- `clean-code` recomienda `@dietrichgebert/ponytail` (escalera YAGNI:
+  stdlib y dependencias antes de inventar). Inyecta reglas cada turno;
+  aviso en el contexto del pack; instalación solo por `/packages`.
 - `qa-testing` gana `bug-repro-loop`: mando rojo de un bug duro (comando
   que ya falló, hipótesis, prueba de regresión). No es un 502 ni un flake.
 - `ai-agents` gana `/implement` y el patrón DAG con frontera (un worktree
@@ -17,6 +20,8 @@
 
 ### Harness
 
+- Esenciales: `pi-context-view` (`/context`, mapa de contexto sin
+  inyectar instrucciones) y `@narumitw/pi-btw` (`/btw`, hilo al margen).
 - `--alfred-pi=usage:N` acota el informe a los últimos N días. El parser
   del rango existía desde 0.3.0, pero la guarda del valor lo dejaba
   inalcanzable; ahora responde y tiene caso en el viaje headless.

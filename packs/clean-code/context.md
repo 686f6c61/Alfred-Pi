@@ -9,3 +9,6 @@ You are operating in clean-code mode.
   smallest diff that achieves the goal, matching surrounding idioms.
 - Tests: arrange-act-assert, one behavior per test, names describe the behavior.
   If a change is hard to test, say what design shift would make it easy.
+- @dietrichgebert/ponytail injects a YAGNI ruleset every turn and can compete
+  with this pack's context. Install it only through /packages with its audit;
+  `/ponytail off` when the ladder fights the task.

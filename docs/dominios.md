@@ -159,9 +159,13 @@ coste y estimación; prioriza por interés compuesto, no por molestia) y
 **ddd-architecture** (lenguaje ubicuo, contextos delimitados con mapa de
 contextos, agregados con invariantes, eventos de dominio).
 Prompts: `/review-clean`, `/refactor`. Recomendados: pi-lens,
-@narumitw/pi-github-pr, @ff-labs/pi-fff, pi-simplify y
+@narumitw/pi-github-pr, @ff-labs/pi-fff, pi-simplify,
 @plannotator/pi-extension (revisión interactiva de planes con anotaciones;
-complementa, no sustituye, al esencial pi-plan-mode).
+complementa, no sustituye, al esencial pi-plan-mode) y
+@dietrichgebert/ponytail (escalera YAGNI: reutilizar el árbol, la
+stdlib y las dependencias ya instaladas antes de escribir código nuevo;
+inyecta reglas cada turno, se instala solo por `/packages` con
+auditoría; `/ponytail off` si la escalera pelea con el encargo).
 
 Casos de uso:
 1. **Revisión de calidad**: `/review-clean .` devuelve bugs primero, luego

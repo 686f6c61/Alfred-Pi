@@ -9,6 +9,19 @@ const WWW = join(ROOT, "www")
 const HAS_WWW = existsSync(join(WWW, "src"))
 
 describe.skipIf(!HAS_WWW)("www site", () => {
+const changelogPages = [
+  ["es", join(WWW, "src/pages/changelog.astro")],
+  ["en", join(WWW, "src/pages/en/changelog.astro")],
+] as const
+
+function section(src: string, marker: string): string {
+  const start = src.indexOf(marker)
+  if (start === -1) return ""
+  const rest = src.slice(start)
+  const next = rest.slice(marker.length).search(/<h2>/)
+  return next === -1 ? rest : rest.slice(0, marker.length + next)
+}
+
 test("markdown doc links rewrite to site routes", async () => {
   const { rewriteDocHref } = await import("../www/src/lib/rehype-docs.ts")
   expect(rewriteDocHref("instalacion.md")).toBe("/docs/instalacion")
@@ -17,6 +30,41 @@ test("markdown doc links rewrite to site routes", async () => {
     "https://github.com/686f6c61/Alfred-Pi/blob/main/CONTRIBUTING.md",
   )
   expect(rewriteDocHref("https://pi.dev")).toBe("https://pi.dev")
+})
+
+test("changelog pages keep 0.4.0 hero and name unpublished catalog additions", () => {
+  for (const [locale, file] of changelogPages) {
+    const src = readFileSync(file, "utf8")
+    const hero = section(src, '<section class="hero">')
+    expect(hero, `${locale}: hero`).toContain("0.4.0")
+    expect(src, `${locale}: context essential`).toMatch(/\/context/i)
+    expect(src, `${locale}: btw essential`).toMatch(/\/btw/i)
+    expect(src, `${locale}: ponytail package`).toMatch(/ponytail/i)
+    expect(section(src, "<h2>0.4.0</h2>"), `${locale}: usage range`).toMatch(/usage:N/)
+  }
+})
+
+test("changelog pages do not use em dashes", () => {
+  for (const [locale, file] of changelogPages) {
+    const src = readFileSync(file, "utf8")
+    expect(src, locale).not.toContain("—")
+  }
+})
+
+test("public docs mirror root docs byte by byte", () => {
+  const docs = readdirSync(join(ROOT, "docs"), { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+    .map((entry) => entry.name)
+    .sort()
+
+  for (const name of docs) {
+    const canonical = join(ROOT, "docs", name)
+    const published = join(WWW, "docs", name)
+    expect(existsSync(published), `falta www/docs/${name}`).toBe(true)
+    const canonicalBytes = readFileSync(canonical)
+    const publishedBytes = readFileSync(published)
+    expect(Buffer.compare(publishedBytes, canonicalBytes), `www/docs/${name} difiere de docs/${name}`).toBe(0)
+  }
 })
 
 test("astro collection glob stays at docs/*.md so auditoria never publishes", () => {

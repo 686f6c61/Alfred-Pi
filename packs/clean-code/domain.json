@@ -8,7 +8,8 @@
     "@narumitw/pi-github-pr",
     "@ff-labs/pi-fff",
     "pi-simplify",
-    "@plannotator/pi-extension"
+    "@plannotator/pi-extension",
+    "@dietrichgebert/ponytail"
   ],
   "recommended": {
     "thinkingLevel": "medium"

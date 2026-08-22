@@ -110,6 +110,22 @@ export const ESSENTIALS: EssentialPackage[] = [
     category: "Tasks",
     description: "Ejecuta tareas largas sin secuestrar el turno de conversación.",
   },
+  {
+    curator: "equipo Alfred-Pi",
+    reviewedAt: "2026-08-22T00:00:00.000Z",
+    id: "pi-context-view",
+    label: "Mapa de contexto",
+    category: "UI",
+    description: "Desglosa el contexto por prompt, herramientas, extensiones y mensajes. /context. No inyecta instrucciones al modelo.",
+  },
+  {
+    curator: "equipo Alfred-Pi",
+    reviewedAt: "2026-08-22T00:00:00.000Z",
+    id: "@narumitw/pi-btw",
+    label: "Pregunta al margen",
+    category: "Human",
+    description: "Hilo paralelo con /btw mientras el turno principal sigue. El desvío no entra en la conversación salvo que lo traigas.",
+  },
 ]
 
 /** Extract the set of npm package names recorded in settings.json `packages`. */
