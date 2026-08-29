@@ -73,7 +73,7 @@ changelog completo en un modal, y el correo, a prueba de cosecha de direcciones.
    mitad de un stream.
 4. **La auditoría de paquetes.** En `/essentials` se examinan las fuentes
    antes de instalar. El buscador `/packages` se alinea. Informa, tú decides.
-5. **Proveedores y claves.** 22 presets (Grok, Kimi, Codex, Claude, GLM,
+5. **Proveedores y claves.** 30 presets (Grok, Kimi, Codex, Claude, GLM,
    Ollama local y Cloud, LM Studio, vLLM...). El local no es un recoveco:
    es un preset de primera. Claves con máscara, referencias `$ENV`, doctor
    con latencia real.

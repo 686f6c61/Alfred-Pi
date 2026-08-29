@@ -12,6 +12,8 @@ export interface ProviderPreset {
   credentialPolicy?: CredentialPolicy
   keyEnv?: string
   keyLiteral?: string
+  /** Cabeceras extra (p. ej. api-key de Azure) con refs $ENV resueltas al usar. */
+  headers?: Record<string, string>
   note?: string
   compat?: { supportsDeveloperRole?: boolean }
 }
@@ -92,6 +94,77 @@ export const PROVIDER_PRESETS: ProviderPreset[] = [
     note: "Remote cloud models (glm-5.2, kimi-k2.7-code, deepseek-v4…). Key at ollama.com/settings/keys.",
   },
   // --- gateways & general APIs --------------------------------------------
+  {
+    id: "google-gemini",
+    label: "Google - Gemini (AI Studio)",
+    api: "google-generative-ai",
+    baseUrl: "https://generativelanguage.googleapis.com/v1beta",
+    credentialPolicy: { authorizedOrigin: "https://generativelanguage.googleapis.com" },
+    keyEnv: "GEMINI_API_KEY",
+    note: "Gemini con capa gratis en AI Studio. ¿Vertex o Code Assist? Usa el acceso nativo de Google con pi /login.",
+  },
+  {
+    id: "qwen",
+    label: "Alibaba - Qwen (Model Studio)",
+    api: "openai-completions",
+    baseUrl: "https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
+    credentialPolicy: { authorizedOrigin: "https://dashscope-intl.aliyuncs.com" },
+    keyEnv: "DASHSCOPE_API_KEY",
+    note: "Región internacional. Qwen3-Coder es de los modelos abiertos más usados en agentes.",
+  },
+  {
+    id: "minimax",
+    label: "MiniMax - M2 / Coding Plan",
+    api: "openai-completions",
+    baseUrl: "https://api.minimax.io/v1",
+    credentialPolicy: { authorizedOrigin: "https://api.minimax.io" },
+    keyEnv: "MINIMAX_API_KEY",
+    note: "MiniMax M2 y su plan de código: barato y rápido para agentes.",
+  },
+  {
+    id: "nvidia",
+    label: "NVIDIA NIM",
+    api: "openai-completions",
+    baseUrl: "https://integrate.api.nvidia.com/v1",
+    credentialPolicy: { authorizedOrigin: "https://integrate.api.nvidia.com" },
+    keyEnv: "NVIDIA_API_KEY",
+    note: "DeepSeek, Qwen y Llama hosted por NVIDIA, con tiers gratuitos.",
+  },
+  {
+    id: "perplexity",
+    label: "Perplexity - Sonar",
+    api: "openai-completions",
+    baseUrl: "https://api.perplexity.ai",
+    credentialPolicy: { authorizedOrigin: "https://api.perplexity.ai" },
+    keyEnv: "PERPLEXITY_API_KEY",
+    note: "Sonar con búsqueda en vivo. Sin endpoint /models: la sonda puede fallar y se guarda igualmente.",
+  },
+  {
+    id: "hugging-face",
+    label: "Hugging Face Router",
+    api: "openai-completions",
+    baseUrl: "https://router.huggingface.co/v1",
+    credentialPolicy: { authorizedOrigin: "https://router.huggingface.co" },
+    keyEnv: "HF_TOKEN",
+    note: "Un solo token para cientos de modelos del hub.",
+  },
+  {
+    id: "azure-openai",
+    label: "Azure OpenAI / AI Foundry (avanzado)",
+    api: "openai-completions",
+    baseUrl: "https://TU-RECURSO.openai.azure.com/openai/v1",
+    keyEnv: "AZURE_OPENAI_API_KEY",
+    headers: { "api-key": "$AZURE_OPENAI_API_KEY" },
+    note: "Edita TU-RECURSO por el nombre de tu recurso; el modelo es el nombre del deployment. Requiere la API v1.",
+  },
+  {
+    id: "bedrock",
+    label: "Amazon Bedrock (vía gateway LiteLLM)",
+    api: "openai-completions",
+    baseUrl: "http://localhost:4000/v1",
+    keyEnv: "LITELLM_KEY",
+    note: "Bedrock exige firma AWS: corre un gateway LiteLLM local o propio y apunta aquí; los modelos se nombran bedrock/…",
+  },
   {
     id: "openrouter",
     label: "OpenRouter",

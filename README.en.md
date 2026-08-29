@@ -72,7 +72,7 @@ house diary: the full changelog in a modal, and a spam-proof contact address.
    Never mid-stream.
 4. **Package audit.** `/essentials` inspects sources before install. Audit
    on essentials; the search browser is catching up. It informs, you decide.
-5. **Providers and keys.** 22 presets (Grok, Kimi, Codex, Claude, GLM,
+5. **Providers and keys.** 30 presets (Grok, Kimi, Codex, Claude, GLM,
    local Ollama, Ollama Cloud, LM Studio, vLLM...). Local is first class,
    not a leftover. Masked keys, `$ENV` references, a doctor with real latency.
 6. **Alfred (optional).** Courtesy with a technical bite. Dismiss him with
