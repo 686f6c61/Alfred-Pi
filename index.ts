@@ -257,7 +257,7 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
           const want = await ctx.ui.confirm("Welcome to Alfred-Pi", "No providers configured yet. Run the guided setup now?")
           if (want) {
             const { onboardingFlow } = await import("./lib/onboarding-flow.ts")
-            await onboardingFlow(pi, ctx, { agentDir, repoRoot, importScan: () => scanOpencodeSources(process.env.HOME ?? process.env.USER_PROFILE ?? "") })
+            await onboardingFlow(pi, ctx, { agentDir, repoRoot, importScan: process.env.PI_CODING_AGENT_DIR ? undefined : () => scanOpencodeSources() })
           } else {
             const { completeOnboarding } = await import("./lib/onboarding.ts")
             const ob = await import("./lib/onboarding.ts")

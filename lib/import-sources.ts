@@ -5,6 +5,7 @@
  * enmascarado y aplica solo con permiso. Copia, nunca muda. Node puro.
  */
 import { existsSync, readFileSync } from "node:fs"
+import { homedir } from "node:os"
 import { join } from "node:path"
 import { PROVIDER_PRESETS } from "./presets.ts"
 
@@ -52,12 +53,33 @@ export function maskKey(key: string): string {
   return `${key.slice(0, 7)}… (${key.length} chars)`
 }
 
-/** Rutas canónicas de OpenCode bajo el home del usuario. */
-export function locateOpencode(home: string): { auth: string; config: string } {
-  return {
-    auth: join(home, ".local", "share", "opencode", "auth.json"),
-    config: join(home, ".config", "opencode", "opencode.json"),
-  }
+export interface OpencodeLocation {
+  auth: string
+  config: string
+}
+
+/**
+ * Sitios canónicos de OpenCode por plataforma, todos bajo el home del
+ * usuario: XDG (`~/.local/share`, `~/.config`) en Linux y macOS, y
+ * `AppData/Roaming` en Windows. Se comprueban todos: cuesta nada y cubre
+ * instalaciones mixtas (claves en un sitio, config en otro).
+ */
+export function opencodeLocations(home = homedir()): OpencodeLocation[] {
+  return [
+    {
+      auth: join(home, ".local", "share", "opencode", "auth.json"),
+      config: join(home, ".config", "opencode", "opencode.json"),
+    },
+    {
+      auth: join(home, "AppData", "Roaming", "opencode", "auth.json"),
+      config: join(home, "AppData", "Roaming", "opencode", "opencode.json"),
+    },
+  ]
+}
+
+/** Rutas canónicas XDG, las de Linux y macOS. */
+export function locateOpencode(home = homedir()): OpencodeLocation {
+  return opencodeLocations(home)[0]
 }
 
 function readTolerantJson(path: string): Record<string, unknown> | undefined {
@@ -92,24 +114,35 @@ function usableBaseUrl(raw: string | undefined): string | undefined {
  * y, si hace falta, baseURL en opencode.json. Los sin clave o sin URL
  * utilizable no se ofrecen. Nunca lanza: un fuente roto no bloquea el arranque.
  */
-export function scanOpencodeSources(home: string): OpencodeImportItem[] {
-  const { auth, config } = locateOpencode(home)
-  const authRaw = readTolerantJson(auth)
-  if (!authRaw) return []
-  const configRaw = readTolerantJson(config)
-  const configProviders = (configRaw?.provider ?? {}) as Record<string, { options?: { baseURL?: string } }>
+export function scanOpencodeSources(home = homedir()): OpencodeImportItem[] {
+  // Fusión de todas las ubicaciones candidatas: primera clave y primera
+  // baseURL que aparezcan por id ganan.
+  const keys = new Map<string, string>()
+  const baseUrls = new Map<string, string>()
+  for (const loc of opencodeLocations(home)) {
+    const authRaw = readTolerantJson(loc.auth)
+    if (authRaw) {
+      for (const [id, value] of Object.entries(authRaw)) {
+        const key = (value as { key?: unknown } | null)?.key
+        if (typeof key === "string" && key && !keys.has(id)) keys.set(id, key)
+      }
+    }
+    const configRaw = readTolerantJson(loc.config)
+    if (configRaw) {
+      const providers = (configRaw.provider ?? {}) as Record<string, { options?: { baseURL?: string } }>
+      for (const [id, p] of Object.entries(providers)) {
+        const b = p?.options?.baseURL
+        if (typeof b === "string" && b && !baseUrls.has(id)) baseUrls.set(id, b)
+      }
+    }
+  }
 
   const items: OpencodeImportItem[] = []
-  for (const [sourceId, value] of Object.entries(authRaw)) {
-    if (!value || typeof value !== "object") continue
-    const entry = value as { type?: unknown; key?: unknown }
-    const key = typeof entry.key === "string" ? entry.key : ""
-    if (!key) continue
-
+  for (const [sourceId, key] of keys) {
     const exact = PROVIDER_PRESETS.find((p) => p.id === sourceId)
     const aliasId = PRESET_ALIASES[sourceId]
     const preset = exact ?? (aliasId ? PROVIDER_PRESETS.find((p) => p.id === aliasId) : undefined)
-    const customUrl = usableBaseUrl(configProviders[sourceId]?.options?.baseURL)
+    const customUrl = usableBaseUrl(baseUrls.get(sourceId))
 
     if (preset) {
       items.push({
