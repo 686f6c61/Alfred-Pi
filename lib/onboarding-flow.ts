@@ -478,7 +478,7 @@ export async function onboardingFlow(
   // diagnósticos específicos.
   let credentialPolicy = preset.credentialPolicy
   let presetBaseUrl = preset.baseUrl
-  if (GATEWAY_PRESET_IDS.has(preset.id) || preset.id === "custom-openai") {
+  if (GATEWAY_PRESET_IDS.has(preset.id) || preset.id === "custom-openai" || preset.id === "azure-openai") {
     const raw = await ui.input(`URL base para ${preset.label}`, preset.baseUrl)
     const policy = await approveCredentialOrigin(ui, (raw ?? "").trim())
     if (!policy) {

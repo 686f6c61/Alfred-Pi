@@ -150,3 +150,58 @@ test("onboarding_without_scanner_keeps_no_import_step", async () => {
     rmSync(agentDir, { recursive: true, force: true })
   }
 })
+
+test("onboarding_imports_guided_url_and_azure_headers_flow_to_probe_and_config", async () => {
+  // Dos servidores: opencode-go sin URL en OpenCode (el asistente la pide,
+  // sugerencia Zen) y azure-openai con cabecera api-key de $ENV. La sonda
+  // captura las cabeceras reales para probar que la clave viaja donde toca.
+  const agentDir = mkdtempSync(join(tmpdir(), "pi686-onb-imp4-"))
+  try {
+    process.env.AZURE_OPENAI_API_KEY = "az-env-key-999"
+    const captured: Array<Record<string, string>> = []
+    globalThis.fetch = (async (_url: string | URL, init?: { headers?: Record<string, string> }): Promise<Response> => {
+      captured.push(init?.headers ?? {})
+      return { ok: true, status: 200, json: async () => ({ data: [{ id: "model-x" }] }) } as unknown as Response
+    }) as unknown as typeof fetch
+
+    let confirms = 0
+    let inputs = 0
+    const ui = {
+      confirm: async () => ++confirms <= 3, // importar, autorizar 2 orígenes, aplicar
+      input: async (t: string) => {
+        inputs += 1
+        return t.includes("opencode-go") ? "https://opencode.ai/zen/v1" : "https://mi-recurso.openai.azure.com/openai/v1"
+      },
+      notify: async () => {},
+      setStatus: async () => {},
+      select: async () => undefined,
+    }
+    const ctx = { ui } as unknown as Parameters<typeof onboardingFlow>[1]
+    const pi = { setModel: async () => true } as unknown as Parameters<typeof onboardingFlow>[0]
+
+    await onboardingFlow(pi, ctx, {
+      agentDir,
+      repoRoot: agentDir,
+      importScan: () => [
+        { sourceId: "opencode-go", kind: "custom", suggestedUrl: "https://opencode.ai/zen/v1", key: "zen-key-000", keyMasked: "zen-key…" },
+        { sourceId: "azure", kind: "preset", presetId: "azure-openai", presetLabel: "Azure OpenAI (avanzado)", baseUrl: "https://mi-recurso.openai.azure.com/openai/v1", key: "$AZURE_OPENAI_API_KEY", keyMasked: "az-env-k…" },
+      ],
+    })
+
+    const models = JSON.parse(readFileSync(join(agentDir, "models.json"), "utf-8")) as {
+      providers?: Record<string, { baseUrl?: string; apiKey?: string; headers?: Record<string, string> }>
+    }
+    // la URL guiada se usó…
+    expect(models.providers?.["opencode-go"]?.baseUrl).toBe("https://opencode.ai/zen/v1")
+    // …y las cabeceras de Azure llegaron resueltas a la config
+    expect(models.providers?.["azure-openai"]?.headers).toEqual({ "api-key": "az-env-key-999" })
+    // la sonda recibió la autorización correcta en ambas
+    const lowered = captured.map((h) => Object.fromEntries(Object.entries(h).map(([k, v]) => [k.toLowerCase(), v])))
+    expect(lowered.some((h) => h["authorization"] === "Bearer zen-key-000")).toBe(true)
+    expect(lowered.some((h) => h["api-key"] === "az-env-key-999")).toBe(true)
+    expect(inputs).toBe(1) // solo opencode-go pidió URL
+  } finally {
+    delete process.env.AZURE_OPENAI_API_KEY
+    rmSync(agentDir, { recursive: true, force: true })
+  }
+})
