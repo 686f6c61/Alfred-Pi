@@ -20,6 +20,7 @@ import { loadAutopilotState, formatAutopilotText } from "./lib/autopilot.ts"
 import { curateTurn } from "./lib/curate-turn.ts"
 import { collectStack, formatStackText } from "./lib/stack.ts"
 import { loadOnboardingState, shouldShowOnboarding } from "./lib/onboarding.ts"
+import { scanOpencodeSources } from "./lib/import-sources.ts"
 import { PERSONAS, loadPersonaState, savePersonaState, buildHeaderLines } from "./lib/persona.ts"
 import { installedVersion } from "./lib/update-check.ts"
 import { collectUsage, aggregateUsage, formatUsageReport } from "./lib/usage.ts"
@@ -256,7 +257,7 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
           const want = await ctx.ui.confirm("Welcome to Alfred-Pi", "No providers configured yet. Run the guided setup now?")
           if (want) {
             const { onboardingFlow } = await import("./lib/onboarding-flow.ts")
-            await onboardingFlow(pi, ctx, { agentDir, repoRoot })
+            await onboardingFlow(pi, ctx, { agentDir, repoRoot, importScan: () => scanOpencodeSources(process.env.HOME ?? process.env.USER_PROFILE ?? "") })
           } else {
             const { completeOnboarding } = await import("./lib/onboarding.ts")
             const ob = await import("./lib/onboarding.ts")

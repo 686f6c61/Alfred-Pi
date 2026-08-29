@@ -73,6 +73,7 @@ aparte (`allowInsecureLoopback`).
 | `audit-receipts/` | Recibo inmutable por `nombre@version` de una auditoría de paquete |
 | `backups/` | Copias completas y sin redacción, con `backup.json` |
 | `update-cache.json`, `catalog-cache.json` | Cachés de 24 h (manifiesto de versión, models.dev) |
+| `~/.local/share/opencode/auth.json`, `~/.config/opencode/opencode.json` | Solo durante el paso de importación del asistente o al pedirlo en `/providers`: se leen, se muestran enmascarados y se copian a los ficheros nativos de pi si el usuario acepta. Nunca se escriben ni se borran |
 | `sonar.env` | `SONAR_URL` y `SONAR_TOKEN` escritos por `writeSonarEnv` con modo `0600`; nunca incluye `SONAR_PASS` ni vive en el repositorio |
 | `migrated-from.json` | Recibo de la mudanza 0.2.x: `{ from, at }`. Solo aparece si `getDataDir` copió `pi-harness-moe/` a `alfred-pi/` |
 

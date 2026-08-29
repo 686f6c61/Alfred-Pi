@@ -147,10 +147,19 @@ test("session_start tui: onboarding declined marks the state done", async () => 
 })
 
 test("session_start tui: onboarding accepted runs the wizard, Esc closes it", async () => {
-  // The wizard opens and the person leaves at the first dialog.
-  const h = await install({ confirms: [true], selects: [undefined] })
-  await h.handlers["session_start"]!({}, h.ctx("tui"))
-  expect(h.scripted.notifications.some((n) => n.message.includes("Asistente cerrado"))).toBe(true)
+  // The wizard opens and the person leaves at the first dialog. HOME se aísla
+  // para que el paso 0 (claves de OpenCode) no encuentre nada y el viaje sea
+  // determinista: sin importación, el primer diálogo sigue siendo la ruta.
+  const prevHome = process.env.HOME
+  process.env.HOME = agent.dataDir
+  try {
+    const h = await install({ confirms: [true], selects: [undefined] })
+    await h.handlers["session_start"]!({}, h.ctx("tui"))
+    expect(h.scripted.notifications.some((n) => n.message.includes("Asistente cerrado"))).toBe(true)
+  } finally {
+    if (prevHome === undefined) delete process.env.HOME
+    else process.env.HOME = prevHome
+  }
 })
 
 test("session_start tui: an exploding config lands in the courtesy catch", async () => {

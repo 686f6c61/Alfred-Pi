@@ -20,6 +20,14 @@
 - `recordTransportFailure` y `classifyTransportFailure` eran código muerto
   (nadie los invocaba en runtime); se retiran junto a `recordResponse`.
 
+### Onboarding
+
+- Importación de credenciales de OpenCode en el primer arranque: el asistente
+  encuentra los servidores con clave, los muestra enmascarados y los importa
+  con una confirmación; los que casan con preset se montan solos y los custom
+  traen su baseURL. Sonda por servidor incluida. La fuente es inyectable
+  (`import-sources.ts`, Node puro) para añadir otras herramientas después.
+
 ### Documentación
 
 - README ES/EN: la frase del sitio público ya no dice que `www/` está en

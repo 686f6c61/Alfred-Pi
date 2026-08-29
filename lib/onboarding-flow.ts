@@ -13,6 +13,7 @@ import { loadAutopilotState, saveAutopilotState } from "./autopilot.ts"
 import { loadBudgetState, saveBudgetState } from "./budget.ts"
 import { enableAllDomains } from "./domains.ts"
 import { DEFAULT_OLLAMA_BASE, ollamaTags } from "./ollama.ts"
+import { scanOpencodeSources, type OpencodeImportItem } from "./import-sources.ts"
 
 const ROUTE_LABELS = [
   "Ya pago una nube o tengo una clave",
@@ -179,11 +180,199 @@ async function approveCredentialOrigin(ui: ExtensionContext["ui"], baseUrl: stri
   }
 }
 
-export async function onboardingFlow(pi: ExtensionAPI, ctx: OnboardingContext, dirs: { agentDir: string; repoRoot: string }): Promise<void> {
+
+async function importFoundSources(
+  pi: ExtensionAPI,
+  ctx: OnboardingContext,
+  dirs: { agentDir: string; repoRoot: string },
+  items: OpencodeImportItem[],
+  state: OnboardingState,
+): Promise<{ done: boolean; modelSummary: string; state: OnboardingState }> {
+  const ui = ctx.ui!
+  const paths = getPaths(dirs.agentDir)
+
+  // Un solo permiso de orígenes: la clave solo viaja a los origenes listados.
+  const origins: string[] = []
+  const usable: Array<{ item: OpencodeImportItem; origin: string; allowInsecure: boolean; api: ApiType; preset?: ProviderPreset }> = []
+  for (const item of items) {
+    const preset = item.presetId ? findPreset(item.presetId) : undefined
+    const api = (preset?.api ?? "openai-completions") as ApiType
+    let origin = ""
+    let allowInsecure = false
+    try {
+      const url = new URL(item.baseUrl ?? "")
+      origin = url.origin
+      allowInsecure = url.protocol === "http:"
+    } catch {
+      continue
+    }
+    if (!origins.includes(origin)) origins.push(origin)
+    usable.push({ item, origin, allowInsecure, api, preset: preset ?? undefined })
+  }
+  if (usable.length === 0) {
+    await ui.notify("Ninguno de los servidores encontrados tiene una URL utilizable; nada se importó.", "warning")
+    return { done: false }
+  }
+  const okOrigins = await ui.confirm(
+    `Autorizar claves para: ${origins.join(", ")}?`,
+    "La clave solo se enviará a estos orígenes exactos.",
+  )
+  if (!okOrigins) {
+    await ui.notify("Nada importado. Puedes usar el asistente clásico o /providers.", "info")
+    return { done: false }
+  }
+
+  // Sonda por servidor: se importa todo, pero el estado de cada uno queda claro.
+  const modelsR = loadModels(paths)
+  const models = modelsR.error ? { providers: {} } : modelsR.data
+  let defaultProvider: string | undefined
+  let defaultModel: string | undefined
+  const results: string[] = []
+  for (const { item, origin, allowInsecure, api, preset } of usable) {
+    const providerId = item.presetId ?? item.sourceId
+    await ui.setStatus("alfred-onboarding", `probando ${item.sourceId}...`)
+    const probe = await probeLiveness({
+      provider: providerId,
+      baseUrl: item.baseUrl ?? "",
+      api,
+      apiKey: item.key,
+      credentialPolicy: { authorizedOrigin: origin, ...(allowInsecure ? { allowInsecureLoopback: true } : {}) },
+    })
+    await ui.setStatus("alfred-onboarding", undefined)
+    const discovered = (probe.models ?? []).slice(0, 5).map((id) => ({ id }))
+    models.providers[providerId] = {
+      baseUrl: item.baseUrl ?? preset?.baseUrl ?? "",
+      api,
+      apiKey: item.key,
+      credentialPolicy: { authorizedOrigin: origin, ...(allowInsecure ? { allowInsecureLoopback: true } : {}) },
+      ...(preset?.compat ? { compat: preset.compat } : {}),
+      ...(discovered.length > 0 ? { models: discovered } : {}),
+    }
+    const mark = probe.ok ? `responde: ${probe.latencyMs} ms, ${probe.models?.length ?? 0} modelos` : `sin respuesta: ${probe.error ?? "?"} (guardado igualmente)`
+    results.push(`· ${item.sourceId} → ${providerId}: ${mark}`)
+    if (probe.ok && !defaultProvider) {
+      defaultProvider = providerId
+      defaultModel = discovered[0]?.id
+    }
+  }
+
+  const settings = loadSettings(paths)
+  const settingsNext = settings.error ? {} : settings.data
+  if (defaultProvider) {
+    settingsNext.defaultProvider = defaultProvider
+    settingsNext.defaultModel = defaultModel
+  }
+  const plan = planWrites({ models, settings: settingsNext }, paths)
+  const lines = [
+    ...results,
+    "",
+    `Modelo por defecto: ${defaultProvider ? `${defaultProvider}/${defaultModel ?? "?"}` : "ninguno con sonda viva"}`,
+    ...plan.flatMap((write) => write.diff.split("\n")),
+  ]
+  const custom = (ui as unknown as {
+    custom?: <T>(factory: (tui: unknown, theme: unknown, kb: unknown, done: (value?: T) => void) => TextComponent) => Promise<T>
+  }).custom
+  if (typeof custom === "function") {
+    await custom.call(ui, (tui, theme, kb, done) => {
+      void tui
+      void theme
+      void kb
+      return new OnboardingDiffView(`Importación: ${plan.length} archivo(s) cambiarán`, lines, () => done())
+    })
+  } else {
+    await ui.notify(lines.join("\n"), "info")
+  }
+  const apply = await ui.confirm("¿Aplicar la importación?", "Se hará una copia de seguridad antes de la escritura atómica.")
+  if (!apply) {
+    await ui.notify("Nada escrito. Puedes usar el asistente clásico o /providers.", "info")
+    return { done: false }
+  }
+  applyPlan(plan, paths)
+  state = recordStep(state, "import:opencode")
+  saveOnboardingState(state, paths.dataDir)
+let modelSummary = "La configuración está guardada. Puedes elegir el modelo desde /model sin depender de /reload."
+  if (defaultProvider) {
+    const activated = await activateSessionModel(pi, ctx, defaultProvider, defaultModel)
+    if (activated) modelSummary = `${defaultProvider}/${defaultModel} ya está activo en esta sesión.`
+  }
+  return { done: true, modelSummary, state }
+}
+
+
+/** Tramo común de cierre: autopilot y presupuesto opcionales + alta completada. */
+async function finishSetup(
+  pi: ExtensionAPI,
+  ctx: OnboardingContext,
+  dirs: { agentDir: string; repoRoot: string },
+  state: OnboardingState,
+  modelResult: string,
+): Promise<void> {
+  const ui = ctx.ui!
+  const paths = getPaths(dirs.agentDir)
+  const auto = await ui.confirm("¿Activar autopilot y preparar los packs por turno?", "Puedes cambiarlo después desde /autopilot.")
+  if (auto) {
+    const autoState = loadAutopilotState(paths.dataDir)
+    autoState.enabled = true
+    autoState.enabledAt = new Date().toISOString()
+    saveAutopilotState(autoState, paths.dataDir)
+    // Same routine as "deal all cards": every pack's skills on the menu.
+    const dealt = enableAllDomains({ agentDir: dirs.agentDir, cwd: process.cwd(), dataDir: paths.dataDir, repoRoot: dirs.repoRoot })
+    const okCount = dealt.filter((r) => r.ok).length
+    if (dealt.length > 0) await ui.notify(`Preparados ${okCount}/${dealt.length} packs. Se cargarán al ejecutar /reload; el modelo de esta sesión no depende de esa recarga.`, "info")
+    state = recordStep(state, "autopilot")
+    saveOnboardingState(state, paths.dataDir)
+  }
+
+  const wantBudget = await ui.confirm(
+    "¿Fijar un presupuesto diario en USD?",
+    "Habrá aviso al 80 % y modo frugal al 100 %. El guardián lee tus sesiones locales y te avisa; no te corta ni envía datos a ningún sitio. Puedes saltarlo.",
+  )
+  if (wantBudget) {
+    const raw = await ui.input("Máximo de USD por día", "5")
+    const value = Number(raw)
+    if (!Number.isNaN(value) && value > 0) {
+      const b = loadBudgetState(paths.dataDir)
+      b.dailyMaxUsd = value
+      saveBudgetState(b, paths.dataDir)
+      state = recordStep(state, `budget:${value}`)
+      saveOnboardingState(state, paths.dataDir)
+    }
+  }
+
+  saveOnboardingState(completeOnboarding(state), paths.dataDir)
+  const packsResult = auto ? "Ejecuta /reload cuando quieras cargar los packs preparados." : "Puedes abrir /autopilot cuando quieras activar el radar."
+  await ui.notify(`Listo. ${modelResult} ${packsResult} Cierre opcional: instala @gotgenes/pi-permission-system desde /essentials para pedir permiso antes de bash y escrituras, si tú lo decides.`, "info")
+}
+
+export async function onboardingFlow(
+  pi: ExtensionAPI,
+  ctx: OnboardingContext,
+  dirs: { agentDir: string; repoRoot: string; importScan?: () => OpencodeImportItem[] },
+): Promise<void> {
   const ui = ctx.ui
   if (!ui) return
   const paths = getPaths(dirs.agentDir)
   let state = loadOnboardingState(paths.dataDir)
+
+  // Step 0: claves que ya viven en esta máquina (OpenCode primero). Importar
+  // gana a interrogar: el escaneo se inyecta desde el adaptador para que lib/
+  // siga siendo pura y los viajes de test no lean el disco real.
+  const found = dirs.importScan?.() ?? []
+  if (found.length > 0) {
+    const list = found.map((i) => `· ${i.sourceId} → ${i.kind === "preset" ? i.presetLabel : i.baseUrl} · ${i.keyMasked}`).join("\n")
+    const wantImport = await ui.confirm(
+      `Encontré ${found.length} servidor(es) con clave en OpenCode`,
+      `¿Los importo?\n${list}\nCopia, no muda: OpenCode seguirá funcionando igual.`,
+    )
+    if (wantImport) {
+      const imported = await importFoundSources(pi, ctx, dirs, found, state)
+      if (imported.done) {
+        await finishSetup(pi, ctx, dirs, imported.state, imported.modelSummary)
+        return
+      }
+      // sin permiso de orígenes o sin sonda viva: sigue el asistente clásico
+    }
+  }
 
   // Step 1: start from the person's route, then show human preset labels.
   const route = await ui.select("¿Cómo quieres usar tu modelo?", [...ROUTE_LABELS])
@@ -352,42 +541,8 @@ export async function onboardingFlow(pi: ExtensionAPI, ctx: OnboardingContext, d
   saveOnboardingState(state, paths.dataDir)
   const modelActivated = await activateSessionModel(pi, ctx, preset.id, settingsNext.defaultModel as string | undefined)
 
-  // Step 5a: autopilot remains optional.
-  const auto = await ui.confirm("¿Activar autopilot y preparar los packs por turno?", "Puedes cambiarlo después desde /autopilot.")
-  if (auto) {
-    const autoState = loadAutopilotState(paths.dataDir)
-    autoState.enabled = true
-    autoState.enabledAt = new Date().toISOString()
-    saveAutopilotState(autoState, paths.dataDir)
-    // Same routine as "deal all cards": every pack's skills on the menu.
-    const dealt = enableAllDomains({ agentDir: dirs.agentDir, cwd: process.cwd(), dataDir: paths.dataDir, repoRoot: dirs.repoRoot })
-    const okCount = dealt.filter((r) => r.ok).length
-    if (dealt.length > 0) await ui.notify(`Preparados ${okCount}/${dealt.length} packs. Se cargarán al ejecutar /reload; el modelo de esta sesión no depende de esa recarga.`, "info")
-    state = recordStep(state, "autopilot")
-    saveOnboardingState(state, paths.dataDir)
-  }
-
-  // Step 5b: daily budget remains optional.
-  const wantBudget = await ui.confirm(
-    "¿Fijar un presupuesto diario en USD?",
-    "Habrá aviso al 80 % y modo frugal al 100 %. El guardián lee tus sesiones locales y te avisa; no te corta ni envía datos a ningún sitio. Puedes saltarlo.",
-  )
-  if (wantBudget) {
-    const raw = await ui.input("Máximo de USD por día", "5")
-    const value = Number(raw)
-    if (!Number.isNaN(value) && value > 0) {
-      const b = loadBudgetState(paths.dataDir)
-      b.dailyMaxUsd = value
-      saveBudgetState(b, paths.dataDir)
-      state = recordStep(state, `budget:${value}`)
-      saveOnboardingState(state, paths.dataDir)
-    }
-  }
-
-  saveOnboardingState(completeOnboarding(state), paths.dataDir)
   const modelResult = modelActivated && settingsNext.defaultModel
     ? `${preset.id}/${settingsNext.defaultModel} ya está activo en esta sesión.`
     : "La configuración está guardada. Puedes elegir el modelo desde /model sin depender de /reload."
-  const packsResult = auto ? "Ejecuta /reload cuando quieras cargar los packs preparados." : "Puedes abrir /autopilot cuando quieras activar el radar."
-  await ui.notify(`Listo. ${modelResult} ${packsResult} Cierre opcional: instala @gotgenes/pi-permission-system desde /essentials para pedir permiso antes de bash y escrituras, si tú lo decides.`, "info")
+  await finishSetup(pi, ctx, dirs, state, modelResult)
 }
