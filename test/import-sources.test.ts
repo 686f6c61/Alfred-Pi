@@ -136,3 +136,30 @@ test("scan_merges_split_locations_auth_in_xdg_baseurl_in_appdata", () => {
     rmSync(home, { recursive: true, force: true })
   }
 })
+
+test("scan_maps_the_new_provider_aliases", () => {
+  const home = fakeHome({
+    auth: JSON.stringify({
+      "nvidia-free": { type: "api", key: "nv-key-1234567890" },
+      "qwen": { type: "api", key: "qw-key-1234567890" },
+      "minimax": { type: "api", key: "mm-key-1234567890" },
+      "perplexity": { type: "api", key: "pp-key-1234567890" },
+      "huggingface": { type: "api", key: "hf-key-1234567890" },
+      "azure": { type: "api", key: "az-key-1234567890" },
+      "bedrock": { type: "api", key: "br-key-1234567890" },
+    }),
+    config: "{}",
+  })
+  try {
+    const byId = new Map(scanOpencodeSources(home).map((i) => [i.sourceId, i]))
+    expect(byId.get("nvidia-free")?.presetId).toBe("nvidia")
+    expect(byId.get("qwen")?.presetId).toBe("qwen")
+    expect(byId.get("minimax")?.presetId).toBe("minimax")
+    expect(byId.get("perplexity")?.presetId).toBe("perplexity")
+    expect(byId.get("huggingface")?.presetId).toBe("hugging-face")
+    expect(byId.get("azure")?.presetId).toBe("azure-openai")
+    expect(byId.get("bedrock")?.presetId).toBe("bedrock")
+  } finally {
+    cleanup(home)
+  }
+})
