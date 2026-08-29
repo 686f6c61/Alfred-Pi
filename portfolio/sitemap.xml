@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://pi.686f6c61.dev/</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pi.686f6c61.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pi.686f6c61.dev/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pi.686f6c61.dev/"/>
+  </url>
+  <url>
+    <loc>https://pi.686f6c61.dev/en/</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pi.686f6c61.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pi.686f6c61.dev/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://pi.686f6c61.dev/"/>
+  </url>
+  <url>
+    <loc>https://pi.686f6c61.dev/salas.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://pi.686f6c61.dev/instalacion.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://pi.686f6c61.dev/comandos.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pi.686f6c61.dev/primeros-pasos.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pi.686f6c61.dev/docs.html</loc>
+    <lastmod>2026-08-29</lastmod>
+    <priority>0.7</priority>
+  </url>
+</urlset>

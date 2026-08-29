@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comandos · Alfred-Pi</title>
+<meta name="description" content="Los once comandos de Alfred-Pi y el modo headless para pipelines: doctor, usage, stack, autopilot y domains.">
+<link rel="canonical" href="https://pi.686f6c61.dev//comandos.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alfred-Pi">
+<meta property="og:title" content="Comandos · Alfred-Pi">
+<meta property="og:description" content="Los once comandos de Alfred-Pi y el modo headless para pipelines: doctor, usage, stack, autopilot y domains.">
+<meta property="og:url" content="https://pi.686f6c61.dev//comandos.html">
+<meta property="og:image" content="https://pi.686f6c61.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pi.686f6c61.dev/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="marquee" aria-hidden="true">
+  <span class="marquee-inner">
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+  </span>
+</div>
+
+<div class="wrap">
+
+  <nav class="topmenu" aria-label="Secciones">
+    <a href="index.html">Cartel</a>
+    <a href="salas.html">Salas</a>
+    <a href="comandos.html" aria-current="page">Comandos</a>
+    <a href="instalacion.html">Instalación</a>
+    <a href="primeros-pasos.html">Primeros pasos</a>
+    <a href="docs.html">Docs</a>
+    <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+    <a href="en/index.html">English</a>
+  </nav>
+
+  <header class="page-mast">
+    <p class="page-kicker"><span style="color:var(--green)">03</span> · HORARIOS · LO QUE TOCA Y CUÁNDO</p>
+    <h1 class="page-title">COMAN<span class="am">DOS</span></h1>
+    <p class="page-claim">
+      Once comandos para dirigir la casa. Se escriben tal cual en la sesión de pi.
+      Y si prefieres pipas y consola, todo lo importante también va <b>headless</b>.
+    </p>
+  </header>
+
+  <main>
+    <div class="times">
+      <div><code>/autopilot</code><span>Alfred elige la sala por ti: contexto del turno, cero menús</span></div>
+      <div><code>/providers</code><span>proveedores, modelos, claves, valores por defecto y copias de seguridad</span></div>
+      <div><code>/usage</code><span>coste y presupuesto diario, leído de tus sesiones locales</span></div>
+      <div><code>/stack</code><span>la torre de control: modelo, salas, salud, presupuesto</span></div>
+      <div><code>/domains</code><span>abre o cierra salas, por proyecto o en toda la casa</span></div>
+      <div><code>/profile</code><span>perfiles con lista de suplentes, en orden</span></div>
+      <div><code>/ollama</code><span>tus modelos locales y de nube Ollama, en igualdad</span></div>
+      <div><code>/essentials</code><span>paquetes curados para la paridad con los agentes grandes, auditados antes de entrar</span></div>
+      <div><code>/packages</code><span>el buscador del ecosistema pi, con auditoría de fuentes</span></div>
+      <div><code>/persona</code><span>Alfred o respuesta neutra; se despide cuando quieras</span></div>
+      <div><code>/providers:doctor</code><span>el médico de la casa: sondas con latencia real y reconciliación de config</span></div>
+    </div>
+
+    <p class="divider" id="headless"><span style="color:var(--green)">+ </span> Headless · sin abrir la TUI <i class="rule" aria-hidden="true"></i> <span>para pipelines y curioseos</span></p>
+
+    <div class="times">
+      <div><code>--alfred-pi=doctor</code><span>informe del médico en texto plano</span></div>
+      <div><code>--alfred-pi=usage</code><span>el informe de gasto completo</span></div>
+      <div><code>--alfred-pi=usage:7</code><span>el mismo informe, últimos N días</span></div>
+      <div><code>--alfred-pi=stack</code><span>la torre de control en texto</span></div>
+      <div><code>--alfred-pi=autopilot</code><span>el estado del radar en texto</span></div>
+      <div><code>--alfred-pi=domains</code><span>las once salas en texto</span></div>
+      <div><code>:json</code><span>cualquiera de los de arriba, como objeto para máquinas</span></div>
+    </div>
+
+    <p class="copy">Ejemplo de pase completo, sin sesión guardada:</p>
+    <div class="cmdrow" style="margin-top:14px">
+      <div class="cmd">
+        <code data-cmd>pi --alfred-pi=doctor --no-session -p ok</code>
+        <button type="button" class="copy-btn">Copiar</button>
+      </div>
+    </div>
+
+    <p class="copy">
+      Un valor desconocido se ignora y la sesión sigue: un flag mal escrito en un
+      pipeline de CI no tumba nada. Y <code>--harness-moe</code> sigue respondiendo
+      como alias del pasado, aunque ya está deprecado.
+    </p>
+
+    <div class="rules">
+      <span class="head">Normas del recinto</span>
+      <span><b>Doctor</b> con latencia real</span>
+      <span><b>:json</b> para máquinas, texto para ti</span>
+      <span><b>Ningún flag</b> tumba la sesión</span>
+    </div>
+  </main>
+
+  <footer>
+    <nav class="footnav" aria-label="Pie">
+      <a href="instalacion.html">Instalación</a>
+      <a href="salas.html">Las salas</a>
+      <a href="comandos.html" aria-current="page">Comandos</a>
+      <a href="primeros-pasos.html">Primeros pasos</a>
+      <a href="docs.html">Docs técnicos</a>
+      <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+      <a href="en/index.html">English</a>
+    </nav>
+    <p class="smallprint">
+      <span>Un producto de <a href="https://harness.moe" target="_blank" rel="noopener">harness.moe</a></span>
+      <span>Web diseñada por GLM 5.3 Flash y Alfred PI</span>
+      <span><a href="https://github.com/686f6c61" target="_blank" rel="noopener">github.com/686f6c61</a></span>
+      <span><a href="https://x.com/686f6c61" target="_blank" rel="noopener">@686f6c61 en X</a></span>
+      <span><button type="button" class="mail-btn">Escríbenos</button></span>
+      <span><button type="button" class="ver-btn">v0.4.0</button> · MIT</span>
+      <span>pi es el anfitrión: <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a></span>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async function () {
+      const row = btn.closest(".cmd")
+      const text = row.querySelector("[data-cmd]").textContent.trim()
+      try { await navigator.clipboard.writeText(text) } catch {
+        const ta = document.createElement("textarea")
+        ta.value = text; document.body.appendChild(ta); ta.select()
+        document.execCommand("copy"); ta.remove()
+      }
+      btn.textContent = "¡Dentro!"
+      setTimeout(() => { btn.textContent = "Copiar" }, 1600)
+    })
+  })
+</script>
+<script src="changelog.js"></script>
+<script src="mail.js"></script>
+</body>
+</html>

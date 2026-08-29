@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primeros pasos · Alfred-Pi</title>
+<meta name="description" content="Cinco minutos con Alfred-Pi: el asistente de primer arranque, tu modelo, el radar y los extras de la casa.">
+<link rel="canonical" href="https://pi.686f6c61.dev//primeros-pasos.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alfred-Pi">
+<meta property="og:title" content="Primeros pasos · Alfred-Pi">
+<meta property="og:description" content="Cinco minutos con Alfred-Pi: el asistente de primer arranque, tu modelo, el radar y los extras de la casa.">
+<meta property="og:url" content="https://pi.686f6c61.dev//primeros-pasos.html">
+<meta property="og:image" content="https://pi.686f6c61.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pi.686f6c61.dev/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="marquee" aria-hidden="true">
+  <span class="marquee-inner">
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+  </span>
+</div>
+
+<div class="wrap">
+
+  <nav class="topmenu" aria-label="Secciones">
+    <a href="index.html">Cartel</a>
+    <a href="salas.html">Salas</a>
+    <a href="comandos.html">Comandos</a>
+    <a href="instalacion.html">Instalación</a>
+    <a href="primeros-pasos.html" aria-current="page">Primeros pasos</a>
+    <a href="docs.html">Docs</a>
+    <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+    <a href="en/index.html">English</a>
+  </nav>
+
+  <header class="page-mast">
+    <p class="page-kicker">DESPUÉS DE LA ENTRADA · CINCO MINUTOS</p>
+    <h1 class="page-title">PRIMEROS <span class="gr">PASOS</span></h1>
+    <p class="page-claim">
+      Si algo te suena a menú, no lo es: <b>pide en tu idioma</b> y Alfred atiende.
+      Esto es lo que pasa los primeros cinco minutos y lo que conviene tocar después.
+    </p>
+  </header>
+
+  <main>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <h3>Deja que Alfred reciba</h3>
+        <p>Si es tu primera vez, se abre solo el <b>asistente de primer arranque</b>:
+        preset, clave, sonda de vida, modelo por defecto, salas y presupuesto.
+        Acepta lo que te sirva y sigue; lo que saltes, se toca después.</p>
+        <p class="aside-note">El guardián ya lee tus sesiones locales: te avisa, no corta, no envía nada.</p>
+      </div>
+
+      <div class="step">
+        <span class="n">2</span>
+        <h3>Tu modelo, tu sillón</h3>
+        <p><code>/providers</code> es el salón de modelos y claves: nube o local,
+        en el mismo trato. Cambias de modelo sin salir de la sesión, y cada clave
+        se queda enmascarada y con copia de seguridad antes de cualquier cambio.</p>
+        <p class="aside-note">¿Dudas de la salud de un proveedor? /providers:doctor mide latencia de verdad.</p>
+      </div>
+
+      <div class="step">
+        <span class="n">3</span>
+        <h3>Que Alfred elija la sala</h3>
+        <p><code>/autopilot</code> enciende la escucha: lees tu prompt, Alfred abre la sala
+        que toca y el modelo trabaja con ese contexto. Si prefieres llevar el mando,
+        <code>/domains</code> abre y cierra salas a mano.</p>
+        <p class="aside-note">Una sala por turno. Las skills de las once siguen en el menú del modelo.</p>
+      </div>
+
+      <div class="step">
+        <span class="n">4</span>
+        <h3>Algo nuevo, una orden</h3>
+        <p>Cuando instalas skills o paquetes nuevos, <code>/reload</code> los trae al menú
+        al momento. Sin reiniciar nada, sin abrir puertas que ya estaban abiertas.</p>
+      </div>
+
+      <div class="step">
+        <span class="n">5</span>
+        <h3>Los extras de la casa</h3>
+        <p><code>/essentials</code> trae la paridad con los agentes grandes (paquetes curados
+        y auditados antes de entrar). <code>/usage</code> pone tu gasto del día delante.
+        <code>/profile</code> escribe la lista de suplentes. <code>/ollama</code> presenta
+        a tus modelos locales como de la familia.</p>
+      </div>
+    </div>
+
+    <div class="rules">
+      <span class="head">Si te atascas</span>
+      <span><b>/stack</b> mira la casa entera de un vistazo</span>
+      <span><b>/providers:doctor</b> dice qué eslabón cojea</span>
+      <span><b>La FAQ</b>, en el repo</span>
+    </div>
+  </main>
+
+  <footer>
+    <nav class="footnav" aria-label="Pie">
+      <a href="instalacion.html">Instalación</a>
+      <a href="salas.html">Las salas</a>
+      <a href="comandos.html">Comandos</a>
+      <a href="primeros-pasos.html" aria-current="page">Primeros pasos</a>
+      <a href="docs.html">Docs técnicos</a>
+      <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+      <a href="en/index.html">English</a>
+    </nav>
+    <p class="smallprint">
+      <span>Un producto de <a href="https://harness.moe" target="_blank" rel="noopener">harness.moe</a></span>
+      <span>Web diseñada por GLM 5.3 Flash y Alfred PI</span>
+      <span><a href="https://github.com/686f6c61" target="_blank" rel="noopener">github.com/686f6c61</a></span>
+      <span><a href="https://x.com/686f6c61" target="_blank" rel="noopener">@686f6c61 en X</a></span>
+      <span><button type="button" class="mail-btn">Escríbenos</button></span>
+      <span><button type="button" class="ver-btn">v0.4.0</button> · MIT</span>
+      <span>pi es el anfitrión: <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a></span>
+    </p>
+  </footer>
+
+</div>
+<script src="changelog.js"></script>
+<script src="mail.js"></script>
+</body>
+</html>

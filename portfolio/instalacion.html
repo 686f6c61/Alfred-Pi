@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalación · Alfred-Pi</title>
+<meta name="description" content="Instalar, probar sin instalar, actualizar y desinstalar Alfred-Pi en tu pi. Requiere pi 0.84 o superior.">
+<link rel="canonical" href="https://pi.686f6c61.dev//instalacion.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alfred-Pi">
+<meta property="og:title" content="Instalación · Alfred-Pi">
+<meta property="og:description" content="Instalar, probar sin instalar, actualizar y desinstalar Alfred-Pi en tu pi. Requiere pi 0.84 o superior.">
+<meta property="og:url" content="https://pi.686f6c61.dev//instalacion.html">
+<meta property="og:image" content="https://pi.686f6c61.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pi.686f6c61.dev/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="marquee" aria-hidden="true">
+  <span class="marquee-inner">
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+  </span>
+</div>
+
+<div class="wrap">
+
+  <nav class="topmenu" aria-label="Secciones">
+    <a href="index.html">Cartel</a>
+    <a href="salas.html">Salas</a>
+    <a href="comandos.html">Comandos</a>
+    <a href="instalacion.html" aria-current="page">Instalación</a>
+    <a href="primeros-pasos.html">Primeros pasos</a>
+    <a href="docs.html">Docs</a>
+    <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+    <a href="en/index.html">English</a>
+  </nav>
+
+  <header class="page-mast">
+    <p class="page-kicker"><span class="num" style="color:var(--green)">02</span> · ENTRADAS · TAQUILLA ABIERTA</p>
+    <h1 class="page-title">INSTALA<span class="am">CIÓN</span></h1>
+    <p class="page-claim">
+      Cuatro comandos y la casa anda. Hace falta <b>pi 0.84 o superior</b>
+      (el anfitrión vive en <a href="https://pi.dev" style="color:var(--green)">pi.dev</a>).
+      Al primer arranque, el asistente te recibe: preset, clave, sonda y modelo.
+    </p>
+  </header>
+
+  <main>
+    <div class="cmdrow">
+      <div class="what"><h3>Entrada general</h3><span>instalar y quedárselo</span></div>
+      <div class="cmd">
+        <code data-cmd>pi install git:github.com/686f6c61/Alfred-Pi</code>
+        <button type="button" class="copy-btn">Copiar</button>
+      </div>
+    </div>
+
+    <div class="cmdrow">
+      <div class="what"><h3>Listado, sin entrada</h3><span>probar sin instalar nada</span></div>
+      <div class="cmd">
+        <code data-cmd>pi -e git:github.com/686f6c61/Alfred-Pi</code>
+        <button type="button" class="copy-btn">Copiar</button>
+      </div>
+      <p class="page-claim" style="margin:0;padding:0 18px 18px">Lo carga solo para esta sesión. Si te convence, el comando de arriba y un <code style="color:var(--green)">/reload</code> son toda la instalación.</p>
+    </div>
+
+    <div class="cmdrow">
+      <div class="what"><h3>La casa, al día</h3><span>actualizar todo lo instalado</span></div>
+      <div class="cmd">
+        <code data-cmd>pi update --all</code>
+        <button type="button" class="copy-btn">Copiar</button>
+      </div>
+    </div>
+
+    <div class="cmdrow">
+      <div class="what"><h3>Se despide</h3><span>desinstalar</span></div>
+      <div class="cmd">
+        <code data-cmd>pi remove git:github.com/686f6c61/Alfred-Pi</code>
+        <button type="button" class="copy-btn">Copiar</button>
+      </div>
+      <p class="page-claim" style="margin:0;padding:0 18px 18px">Se va limpio: solo retira lo que la casa puso. <b>Tu configuración es tuya</b> y se queda contigo.</p>
+    </div>
+
+    <div class="rules">
+      <span class="head">Antes de entrar</span>
+      <span><b>pi 0.84</b> o superior</span>
+      <span><b>0 dependencias</b> en runtime</span>
+      <span><b>Las claves</b>, siempre enmascaradas</span>
+      <span><b>Nada se toca</b> sin mostrarte el diff</span>
+    </div>
+  </main>
+
+  <footer>
+    <nav class="footnav" aria-label="Pie">
+      <a href="instalacion.html" aria-current="page">Instalación</a>
+      <a href="salas.html">Las salas</a>
+      <a href="comandos.html">Comandos</a>
+      <a href="primeros-pasos.html">Primeros pasos</a>
+      <a href="docs.html">Docs técnicos</a>
+      <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+      <a href="en/index.html">English</a>
+    </nav>
+    <p class="smallprint">
+      <span>Un producto de <a href="https://harness.moe" target="_blank" rel="noopener">harness.moe</a></span>
+      <span>Web diseñada por GLM 5.3 Flash y Alfred PI</span>
+      <span><a href="https://github.com/686f6c61" target="_blank" rel="noopener">github.com/686f6c61</a></span>
+      <span><a href="https://x.com/686f6c61" target="_blank" rel="noopener">@686f6c61 en X</a></span>
+      <span><button type="button" class="mail-btn">Escríbenos</button></span>
+      <span><button type="button" class="ver-btn">v0.4.0</button> · MIT</span>
+      <span>pi es el anfitrión: <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a></span>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll(".copy-btn").forEach((btn) => {
+    btn.addEventListener("click", async function () {
+      const row = btn.closest(".cmd")
+      const text = row.querySelector("[data-cmd]").textContent.trim()
+      try { await navigator.clipboard.writeText(text) } catch {
+        const ta = document.createElement("textarea")
+        ta.value = text; document.body.appendChild(ta); ta.select()
+        document.execCommand("copy"); ta.remove()
+      }
+      btn.textContent = "¡Dentro!"
+      setTimeout(() => { btn.textContent = "Copiar" }, 1600)
+    })
+  })
+</script>
+<script src="changelog.js"></script>
+<script src="mail.js"></script>
+</body>
+</html>

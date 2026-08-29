@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Las salas · Alfred-Pi</title>
+<meta name="description" content="Las once salas de Alfred-Pi: qué hace cada una, cómo se le pide y dónde está en el repo.">
+<link rel="canonical" href="https://pi.686f6c61.dev//salas.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alfred-Pi">
+<meta property="og:title" content="Las salas · Alfred-Pi">
+<meta property="og:description" content="Las once salas de Alfred-Pi: qué hace cada una, cómo se le pide y dónde está en el repo.">
+<meta property="og:url" content="https://pi.686f6c61.dev//salas.html">
+<meta property="og:image" content="https://pi.686f6c61.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pi.686f6c61.dev/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="marquee" aria-hidden="true">
+  <span class="marquee-inner">
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+  </span>
+</div>
+
+<div class="wrap">
+
+  <nav class="topmenu" aria-label="Secciones">
+    <a href="index.html">Cartel</a>
+    <a href="salas.html" aria-current="page">Salas</a>
+    <a href="comandos.html">Comandos</a>
+    <a href="instalacion.html">Instalación</a>
+    <a href="primeros-pasos.html">Primeros pasos</a>
+    <a href="docs.html">Docs</a>
+    <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+    <a href="en/index.html">English</a>
+  </nav>
+
+  <header class="page-mast">
+    <p class="page-kicker"><span class="num" style="color:var(--green)">01</span> · CARTEL · ESTA NOCHE, ONCE SALAS</p>
+    <h1 class="page-title">LAS <span class="gr">SALAS</span></h1>
+    <p class="page-claim">
+      Once oficios, <b>53 skills</b> y <b>27 prompts</b>. Una sala por turno: escribes
+      en tu idioma y Alfred abre la que toca. Las demás esperan; nadie lee lo que no le toca.
+    </p>
+  </header>
+
+  <main>
+    <div class="roomgrid">
+      <div class="room-card">
+        <span class="tag">Sala 01 · Web / Fullstack</span>
+        <h3>Web Fullstack</h3>
+        <p class="when">Construye el producto que funciona: API, datos, tests y salida a producción.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/scaffold-crud invoices genera migración, API, vistas y tests. /review-api te deja una tabla de rutas y lo que rompería un cambio. /guide escribe una guía con una captura por paso."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/web-fullstack" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>web-fullstack · 12 skills · 3 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 02 · Seguridad</span>
+        <h3>Seguridad</h3>
+        <p class="when">Audita el código en busca de agujeros reales: secretos, CVE, OWASP.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="Escribes «audita la seguridad de este repo». Alfred carga esta sala. El modelo recorre el código y te deja hallazgos con severidad y arreglo. Si usas SonarQube, pide /sonar: levanta el servidor, escanea y te trae la quality gate."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/security" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>security · 5 skills · 4 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 03 · Agentes IA</span>
+        <h3>Agentes IA</h3>
+        <p class="when">Parte un trabajo grande entre varios agentes de pi, cada uno en su sitio.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="«Revisa estos ocho PR en paralelo» o /fanout parte la tarea y estima el coste. Si tienes un spec o tickets que se bloquean entre sí, /implement. Si nadie espera a nadie, usa /fanout."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/ai-agents" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>ai-agents · 1 skill · 2 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 04 · Código limpio</span>
+        <h3>Código limpio</h3>
+        <p class="when">Refactoriza y revisa un PR sin cambiar lo que el código hace.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="«Refactoriza src/foo.ts» o /refactor planifica pasos verificables y los aplica uno a uno. «Revisa este PR» o /review-clean te da bugs, luego dolor de diseño, luego huecos de tests."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/clean-code" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>clean-code · 6 skills · 2 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 05 · DevOps / Infra</span>
+        <h3>DevOps</h3>
+        <p class="when">Diagnostica un 502, endurece Docker y escribe el CI con comprobaciones reales.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/diagnose-502 localiza si fallan DNS, proxy, origen o la app. /ci escribe el workflow. /infra-audit inventaria compose y Dockerfiles (digest, privilegios, red)."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/devops-infra" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>devops-infra · 6 skills · 3 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 06 · Landing design</span>
+        <h3>Landing</h3>
+        <p class="when">Revisa o replica una landing mirando la página pintada, no el código.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/landing-review sobre una URL inspecciona la página renderizada. /landing-from-image parte de un mockup y propone estructura, copy y responsive."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/landing-design" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>landing-design · 6 skills · 2 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 07 · QA / Testing</span>
+        <h3>QA</h3>
+        <p class="when">Plan de pruebas, tests que fallan a veces, y bugs que no se reproducen.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/test-plan de una feature te deja la matriz de qué probar primero. /flaky clasifica un test intermitente y arregla la causa, no el reintento. Si el bug no sale, el bucle rojo: mando que ya falló, hipótesis, regresión."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/qa-testing" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>qa-testing · 5 skills · 3 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 08 · Datos / Análisis</span>
+        <h3>Datos</h3>
+        <p class="when">Perfila un CSV, explica una query lenta y diseña un dashboard que responde preguntas.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/explore datos.csv perfila, limpia con la razón de cada paso y entrega números. /query-review usa el plan EXPLAIN. /dashboard parte de las preguntas de negocio, no de las gráficas."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/data-analisis" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>data-analisis · 4 skills · 3 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 09 · Cumplimiento</span>
+        <h3>Cumplimiento</h3>
+        <p class="when">Revisa RGPD, licencias y accesibilidad con referencias reales, no con opiniones.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/privacy-check src/forms/signup sigue el flujo de datos (consentimiento, terceros, retención). «Audita las licencias» agrupa por obligación. /a11y-audit prioriza los tres arreglos de más impacto."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/compliance" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>compliance · 3 skills · 2 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 10 · Documentación</span>
+        <h3>Docs</h3>
+        <p class="when">Decide qué documentar, en qué modo, y si lo escrito sigue siendo cierto.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="«Documenta esta decisión» o /adr escribe el registro. «Audita la documentación» o /docs-audit clasifica cada página y señala lo que está podrido."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/docs" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>docs · 3 skills · 2 prompts</span></p>
+      </div>
+
+      <div class="room-card">
+        <span class="tag">Sala 11 · Escritura (ES)</span>
+        <h3>Escritura</h3>
+        <p class="when">Corrige y traduce al español de la casa: RAE, sin emojis, respetando tu voz.</p>
+        <p class="use"><span class="use-label">Así lo pides: </span><span data-text="/revision-es README.md edita el archivo, enseña el diff y deja la voz del autor. También vale «corrige este texto» o «traduce esto al español»."></span></p>
+        <p class="more"><a href="https://github.com/686f6c61/Alfred-Pi/tree/main/packs/escritura-es" target="_blank" rel="noopener">Abrir esta sala en el repo</a><span>escritura-es · 2 skills · 1 prompt</span></p>
+      </div>
+    </div>
+
+    <div class="rules">
+      <span class="head">Cómo se abren</span>
+      <span><b>Solas</b>, cuando tu prompt pide el oficio</span>
+      <span><b>A mano</b>, con /domains</span>
+      <span><b>Todas</b>, si les das la casa entera</span>
+    </div>
+  </main>
+
+  <footer>
+    <nav class="footnav" aria-label="Pie">
+      <a href="instalacion.html">Instalación</a>
+      <a href="salas.html" aria-current="page">Las salas</a>
+      <a href="comandos.html">Comandos</a>
+      <a href="primeros-pasos.html">Primeros pasos</a>
+      <a href="docs.html">Docs técnicos</a>
+      <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+      <a href="en/index.html">English</a>
+    </nav>
+    <p class="smallprint">
+      <span>Un producto de <a href="https://harness.moe" target="_blank" rel="noopener">harness.moe</a></span>
+      <span>Web diseñada por GLM 5.3 Flash y Alfred PI</span>
+      <span><a href="https://github.com/686f6c61" target="_blank" rel="noopener">github.com/686f6c61</a></span>
+      <span><a href="https://x.com/686f6c61" target="_blank" rel="noopener">@686f6c61 en X</a></span>
+      <span><button type="button" class="mail-btn">Escríbenos</button></span>
+      <span><button type="button" class="ver-btn">v0.4.0</button> · MIT</span>
+      <span>pi es el anfitrión: <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a></span>
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  const escapeHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+  const withCommands = (s) => escapeHtml(s).replace(/(^|[\s«(])\/([a-z:-]+[a-z])/g, '$1<code>/$2</code>')
+  document.querySelectorAll("[data-text]").forEach((el) => {
+    el.innerHTML = withCommands(el.dataset.text)
+  })
+</script>
+<script src="changelog.js"></script>
+<script src="mail.js"></script>
+</body>
+</html>

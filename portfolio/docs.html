@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs técnicos · Alfred-Pi</title>
+<meta name="description" content="La documentación técnica de Alfred-Pi: producto, arquitectura, datos, extensión y pruebas. Se lee en GitHub, junto al código.">
+<link rel="canonical" href="https://pi.686f6c61.dev//docs.html">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="theme-color" content="#0b0b0d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alfred-Pi">
+<meta property="og:title" content="Docs técnicos · Alfred-Pi">
+<meta property="og:description" content="La documentación técnica de Alfred-Pi: producto, arquitectura, datos, extensión y pruebas. Se lee en GitHub, junto al código.">
+<meta property="og:url" content="https://pi.686f6c61.dev//docs.html">
+<meta property="og:image" content="https://pi.686f6c61.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pi.686f6c61.dev/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<div class="marquee" aria-hidden="true">
+  <span class="marquee-inner">
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+    <b>ALFRED-PI</b> · EL MAYORDOMO DE <b>PI</b>, TU AGENTE DE TERMINAL · <span class="am">11 SALAS</span> · 53 SKILLS · 27 PROMPTS · 22 PRESETS · EN TU TERMINAL · LOCAL Y DE NUBE, MISMO TRATO · TU GASTO SE QUEDA EN CASA · <b>GRATIS, MIT</b> · V0.4.0 ·&nbsp;
+  </span>
+</div>
+
+<div class="wrap">
+
+  <nav class="topmenu" aria-label="Secciones">
+    <a href="index.html">Cartel</a>
+    <a href="salas.html">Salas</a>
+    <a href="comandos.html">Comandos</a>
+    <a href="instalacion.html">Instalación</a>
+    <a href="primeros-pasos.html">Primeros pasos</a>
+    <a href="docs.html" aria-current="page">Docs</a>
+    <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+    <a href="en/index.html">English</a>
+  </nav>
+
+  <header class="page-mast">
+    <p class="page-kicker">BASTIDORES · LO QUE LA CASA NO OCULTA</p>
+    <h1 class="page-title">DOCS <span class="am">TÉCNICOS</span></h1>
+    <p class="page-claim">
+      En esta casa, <b>el código es la verdad final</b>: si un documento difiere, gana
+      el código y el documento se corrige en el mismo cambio. Se leen en GitHub,
+      junto al árbol que describen.
+    </p>
+  </header>
+
+  <main>
+    <div class="doclist">
+      <span class="docrow grp" style="display:block">Producto y operación</span>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/pi.md" target="_blank" rel="noopener">
+        <span class="t">pi.md</span>
+        <span class="q">¿Qué es un harness y cómo funciona el anfitrión pi?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/arquitectura.md" target="_blank" rel="noopener">
+        <span class="t">arquitectura.md</span>
+        <span class="q">¿Qué principios, máquinas de estado y flujo de turno tiene esta capa?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/instalacion.md" target="_blank" rel="noopener">
+        <span class="t">instalacion.md</span>
+        <span class="q">¿Cómo se instala, verifica, actualiza y desinstala?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/comandos.md" target="_blank" rel="noopener">
+        <span class="t">comandos.md</span>
+        <span class="q">¿Qué comando, flag y pantalla hay, y qué toca cada uno?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/dominios.md" target="_blank" rel="noopener">
+        <span class="t">dominios.md</span>
+        <span class="q">¿Cuáles son las once salas, sus skills, prompts y casos de uso?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/datos-y-config.md" target="_blank" rel="noopener">
+        <span class="t">datos-y-config.md</span>
+        <span class="q">¿Qué archivos nativos y qué estado propio existen, campo a campo?</span>
+      </a>
+
+      <span class="docrow grp" style="display:block">Desarrollador</span>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/modulos.md" target="_blank" rel="noopener">
+        <span class="t">modulos.md</span>
+        <span class="q">¿Qué módulo de lib/ hace qué, y cuál es la frontera con pi?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/extender.md" target="_blank" rel="noopener">
+        <span class="t">extender.md</span>
+        <span class="q">¿Cómo añado una sala, una skill, un preset o un esencial?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/docs/probar.md" target="_blank" rel="noopener">
+        <span class="t">probar.md</span>
+        <span class="q">¿Cómo verifico un cambio con bun, sin pi instalado?</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">
+        <span class="t">CONTRIBUTING.md</span>
+        <span class="q">Normas cortas de contribución y release.</span>
+      </a>
+      <a class="docrow" href="https://github.com/686f6c61/Alfred-Pi/blob/main/SECURITY.md" target="_blank" rel="noopener">
+        <span class="t">SECURITY.md</span>
+        <span class="q">Cómo reportar una vulnerabilidad.</span>
+      </a>
+    </div>
+
+    <p class="copy">
+      Las cifras del cartel (once salas, 53 skills, 27 prompts, 22 presets) no están
+      copiadas a mano: hay un test que las cuenta del árbol y despierta a la casa si
+      README y documentos se desincronizan.
+    </p>
+
+    <div class="rules">
+      <span class="head">Para quien mira bastidores</span>
+      <span><b>Tests con bun</b>, sin instalar pi</span>
+      <span><b>0 dependencias</b> en runtime</span>
+      <span><b>El código</b>, siempre por delante</span>
+    </div>
+  </main>
+
+  <footer>
+    <nav class="footnav" aria-label="Pie">
+      <a href="instalacion.html">Instalación</a>
+      <a href="salas.html">Las salas</a>
+      <a href="comandos.html">Comandos</a>
+      <a href="primeros-pasos.html">Primeros pasos</a>
+      <a href="docs.html" aria-current="page">Docs técnicos</a>
+      <a href="https://github.com/686f6c61/Alfred-Pi" target="_blank" rel="noopener">GitHub</a>
+      <a href="en/index.html">English</a>
+    </nav>
+    <p class="smallprint">
+      <span>Un producto de <a href="https://harness.moe" target="_blank" rel="noopener">harness.moe</a></span>
+      <span>Web diseñada por GLM 5.3 Flash y Alfred PI</span>
+      <span><a href="https://github.com/686f6c61" target="_blank" rel="noopener">github.com/686f6c61</a></span>
+      <span><a href="https://x.com/686f6c61" target="_blank" rel="noopener">@686f6c61 en X</a></span>
+      <span><button type="button" class="mail-btn">Escríbenos</button></span>
+      <span><button type="button" class="ver-btn">v0.4.0</button> · MIT</span>
+      <span>pi es el anfitrión: <a href="https://pi.dev" target="_blank" rel="noopener">pi.dev</a></span>
+    </p>
+  </footer>
+
+</div>
+<script src="changelog.js"></script>
+<script src="mail.js"></script>
+</body>
+</html>
