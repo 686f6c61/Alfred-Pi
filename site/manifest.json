@@ -1,12 +1,6 @@
 {
-  "latest": "0.4.1",
+  "latest": "0.4.0",
   "versions": [
-    {
-      "version": "0.4.1",
-      "date": "2026-08-29",
-      "gitTag": "v0.4.1",
-      "notes": "El relevo ya dispara: conteo por turn_end. Headless con texto y :json de verdad. El cartel en pi.686f6c61.dev."
-    },
     {
       "version": "0.4.0",
       "date": "2026-08-21",
