@@ -12,7 +12,7 @@
 ```
 
 **El centro de control para [pi](https://pi.dev): un harness de producto, no un juguete de terminal.**
-Un producto de harness.moe · desarrollado por @686f6c61 · v0.4.0 · MIT · tests con bun · 0 dependencias
+Un producto de harness.moe · desarrollado por @686f6c61 · v0.4.1 · MIT · tests con bun · 0 dependencias
 
 ## Lo que hay dentro (gratis, MIT)
 
@@ -39,6 +39,25 @@ El sitio público vive en la rama `landing` (su código es la carpeta
 `www/` de esa rama; no se sube en `main`, donde solo queda el HTML plano
 de respaldo en `site/`). `docs/auditoria/` es taller interno y no se
 publica.
+
+## El cartel (pi.686f6c61.dev)
+
+La cara pública del producto es un cartel de festival: [pi.686f6c61.dev](https://pi.686f6c61.dev).
+HTML y CSS propios, sin framework ni build; la fuente vive en [`portfolio/`](portfolio/)
+de este repo y se despliega desde la rama [`portfolio`](https://github.com/686f6c61/Alfred-Pi/tree/portfolio).
+
+![El cartel de Alfred-Pi](docs/img/cartel.png)
+
+Line-up de las once salas con su ficha, la entrada con el comando de instalación
+y los horarios con los once comandos. En el pie, el diario de la casa: el
+changelog completo en un modal, y el correo, a prueba de cosecha de direcciones.
+
+![Line-up y entrada](docs/img/cartel-lineup.png)
+
+| Salas | Comandos |
+|---|---|
+| ![Las salas](docs/img/salas.png) | ![Comandos](docs/img/comandos.png) |
+| ![Instalación](docs/img/instalacion.png) | ![Diario de la casa](docs/img/changelog.png) |
 
 ## Qué hace la casa
 

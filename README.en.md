@@ -12,7 +12,7 @@
 ```
 
 **The control center for [pi](https://pi.dev): a product harness, not a terminal toy.**
-A harness.moe product · built by @686f6c61 · v0.4.0 · MIT · tests with bun · 0 dependencies
+A harness.moe product · built by @686f6c61 · v0.4.1 · MIT · tests with bun · 0 dependencies
 
 ## What's inside (free, MIT)
 
@@ -36,10 +36,27 @@ is and how pi works ([pi.md](docs/pi.md)), architecture
 ([datos-y-config.md](docs/datos-y-config.md)), how to extend
 ([extender.md](docs/extender.md)) and how to test
 ([probar.md](docs/probar.md)).
-The public site lives on the `landing` branch (its source is the `www/`
-folder on that branch; it is not uploaded on `main`, which only keeps
-the plain-HTML fallback in `site/`). `docs/auditoria/` is internal
-workshop and is not published.
+The product's public site is the poster at [pi.686f6c61.dev](https://pi.686f6c61.dev) (source in `portfolio/`, deployed from the `portfolio` branch). The technical documentation is read in [`docs/`](docs/index.md) and on GitHub; `docs/auditoria/` is internal workshop and is not published. The old Astro documentation site (`landing` branch) is out of publication.
+
+## The poster (pi.686f6c61.dev)
+
+The product's public face is a festival poster: [pi.686f6c61.dev](https://pi.686f6c61.dev).
+Hand-written HTML and CSS, no framework, no build; the source lives in
+[`portfolio/`](portfolio/) on this repo and deploys from the
+[`portfolio` branch](https://github.com/686f6c61/Alfred-Pi/tree/portfolio).
+
+![The Alfred-Pi poster](docs/img/cartel.png)
+
+The line-up of the eleven rooms with a sheet per room, the ticket with the
+install command and the set times with the eleven commands. In the footer, the
+house diary: the full changelog in a modal, and a spam-proof contact address.
+
+![Line-up and ticket](docs/img/cartel-lineup.png)
+
+| Rooms | Commands |
+|---|---|
+| ![Rooms](docs/img/salas.png) | ![Commands](docs/img/comandos.png) |
+| ![Install](docs/img/instalacion.png) | ![House diary](docs/img/changelog.png) |
 
 ## What the house does
 

@@ -1,6 +1,12 @@
 {
-  "latest": "0.4.0",
+  "latest": "0.4.1",
   "versions": [
+    {
+      "version": "0.4.1",
+      "date": "2026-08-29",
+      "gitTag": "v0.4.1",
+      "notes": "El relevo ya dispara: conteo por turn_end. Headless con texto y :json de verdad. El cartel en pi.686f6c61.dev."
+    },
     {
       "version": "0.4.0",
       "date": "2026-08-21",
@@ -11,13 +17,13 @@
       "version": "0.3.0",
       "date": "2026-08-20",
       "gitTag": "v0.3.0",
-      "notes": "Alfred-Pi: nombre público, sitio bilingüe y mudanza desde 0.2."
+      "notes": "Alfred-Pi: nombre p\u00fablico, sitio biling\u00fce y mudanza desde 0.2."
     },
     {
       "version": "0.2.0",
       "date": "2026-08-20",
       "gitTag": "v0.2.0",
-      "notes": "Centro de control para pi. Docs estáticos en esta misma carpeta."
+      "notes": "Centro de control para pi. Docs est\u00e1ticos en esta misma carpeta."
     }
   ]
 }
