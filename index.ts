@@ -11,12 +11,12 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent"
 import { getBaseDir, findRepoRoot } from "./lib/paths.ts"
 import { runDoctor, formatDoctorReport } from "./lib/doctor.ts"
-import { loadDomainsState, discoverDomains } from "./lib/domains.ts"
+import { loadDomainsState, discoverDomains, formatDomainsText } from "./lib/domains.ts"
 import { checkForUpdate } from "./lib/update-check.ts"
-import { loadFallbackState, saveFallbackState, recordResponse, nextStepAfter, modelKey } from "./lib/fallback.ts"
+import { loadFallbackState, saveFallbackState, recordTurnOutcome, nextStepAfter, modelKey } from "./lib/fallback.ts"
 import { loadProfiles } from "./lib/profiles.ts"
 import { relevoAviso } from "./lib/house-copy.ts"
-import { loadAutopilotState } from "./lib/autopilot.ts"
+import { loadAutopilotState, formatAutopilotText } from "./lib/autopilot.ts"
 import { curateTurn } from "./lib/curate-turn.ts"
 import { collectStack, formatStackText } from "./lib/stack.ts"
 import { loadOnboardingState, shouldShowOnboarding } from "./lib/onboarding.ts"
@@ -225,20 +225,23 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
         const packs = discoverDomains(repoRoot)
         const domainsState = loadDomainsState(dataDir)
         const auto = loadAutopilotState(dataDir)
+        const packList = packs.map((d) => ({
+          id: d.manifest.id,
+          name: d.manifest.name,
+          skills: d.skills.length,
+          prompts: d.prompts.length,
+          enabled: Boolean(domainsState.enabled[d.manifest.id]),
+        }))
+        const lines =
+          which === "autopilot"
+            ? formatAutopilotText({ enabled: auto.enabled, routing: auto.routing, lastDomainId: auto.lastDomainId })
+            : formatDomainsText(packList)
         const payload =
           which === "autopilot"
             ? { enabled: auto.enabled, routing: auto.routing, lastDomainId: auto.lastDomainId ?? null }
-            : {
-                packs: packs.map((d) => ({
-                  id: d.manifest.id,
-                  name: d.manifest.name,
-                  skills: d.skills.length,
-                  prompts: d.prompts.length,
-                  enabled: Boolean(domainsState.enabled[d.manifest.id]),
-                })),
-              }
+            : { packs: packList }
         if (ctx.mode === "print") {
-          process.stdout.write(value.endsWith(":json") ? JSON.stringify(payload, null, 2) + "\n" : JSON.stringify(payload, null, 2) + "\n")
+          process.stdout.write(value.endsWith(":json") ? JSON.stringify(payload, null, 2) + "\n" : lines.join("\n") + "\n")
         }
       }
     }
@@ -298,17 +301,24 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
 
   // -------------------------------------------------------------------------
   // Runtime fallback: track provider failures, auto-switch before a turn
+  //
+  // pi only fires after_provider_response once an HTTP response arrives, so
+  // connection refused, DNS, timeouts and non-2xx responses never reach it.
+  // turn_end fires for every turn outcome with stopReason "error"/"aborted"/
+  // "stop", which counts those invisible failures the same as visible ones.
 
-  pi.on("after_provider_response", async (event, ctx) => {
+  pi.on("turn_end", async (event, ctx) => {
+    const message = (event as { message?: { stopReason?: string; provider?: string; model?: string } }).message
+    if (typeof message?.stopReason !== "string") return
     const model = ctx.model as unknown as { provider?: string; id?: string } | undefined
-    if (!model?.provider || !model?.id) return
+    const provider = message.provider ?? model?.provider
+    const id = message.model ?? model?.id
+    if (!provider || !id) return
     const state = loadFallbackState(dataDir)
-    const payload = event as { status?: number; error?: unknown; err?: unknown }
-    // Count HTTP and transport here; setModel only runs in before_agent_start.
-    const crossed = recordResponse(state, model.provider, model.id, payload.status, payload.error ?? payload.err)
+    const crossed = recordTurnOutcome(state, provider, id, message.stopReason)
     saveFallbackState(state, dataDir)
     if (crossed && state.activeProfile && ctx.ui) {
-      const from = `${model.provider}/${model.id}`
+      const from = `${provider}/${id}`
       let to = state.activeProfile
       try {
         const profile = loadProfiles(paths).profiles.find((p) => p.name === state.activeProfile)
@@ -316,7 +326,7 @@ export default function piHarnessMoe(pi: ExtensionAPI): void {
           const registry = ctx as unknown as {
             modelRegistry?: { find(p: string, m: string): unknown; hasConfiguredAuth(found: unknown): boolean }
           }
-          const step = nextStepAfter(profile, model.provider, model.id, (s) => {
+          const step = nextStepAfter(profile, provider, id, (s) => {
             try {
               const found = registry.modelRegistry?.find(s.provider, s.model)
               return Boolean(found && registry.modelRegistry?.hasConfiguredAuth(found))

@@ -20,10 +20,5 @@
     "extensions": [
       "index.ts"
     ]
-  },
-  "scripts": {
-    "docs:site": "bun --cwd www run build",
-    "docs:site:check": "bun --cwd www run check",
-    "docs:site:dev": "bun --cwd www run dev"
   }
 }

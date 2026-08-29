@@ -31,7 +31,7 @@ prohíbe un entero «N tests».
 | `test/now-matt-skills.test.ts` | 0.4.0: `bug-repro-loop`, `/implement`, DAG y eje Spec |
 | `test/journeys/` | Viajes de TUI con UI falsa (`ScriptedUi`): alta de proveedor, doctor, packs, onboarding, flag headless |
 | `test/helpers/scripted-ui.ts` | Doble de `ctx.ui` y de `ExtensionAPI` para esos viajes |
-| `test/index-contract.test.ts` | Eventos `session_start`, `before_agent_start`, `after_provider_response` contra un pi falso |
+| `test/index-contract.test.ts` | Eventos `session_start`, `before_agent_start`, `turn_end` contra un pi falso |
 | Guardianes | Fronteras y cifras que no pueden volver a romperse. `www-site.test.ts` cubre el sitio, no sustituye al harness |
 
 Cada test de integración apunta `PI_CODING_AGENT_DIR` a un directorio
@@ -79,8 +79,8 @@ licencia **en el mismo cambio** que el árbol. No al revés.
 1. El flag `--alfred-pi=doctor` imprime el informe en modo print.
 2. `before_agent_start` delega en `curateTurn` y puede devolver
    `systemPrompt` / `message`.
-3. `after_provider_response` cuenta fallos y no llama a `setModel`
-   (el relevo es del turno siguiente).
+3. `turn_end` cuenta fallos (`stopReason: "error"`) y no llama a
+   `setModel` (el relevo es del turno siguiente).
 
 Un comando nuevo: registrar, viaje de pantalla, y si es headless, caso
 en `headless-flags`.

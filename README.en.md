@@ -36,9 +36,10 @@ is and how pi works ([pi.md](docs/pi.md)), architecture
 ([datos-y-config.md](docs/datos-y-config.md)), how to extend
 ([extender.md](docs/extender.md)) and how to test
 ([probar.md](docs/probar.md)).
-The public site is the `landing` branch (in this checkout: the `www/`
-folder, not uploaded on `main`). `docs/auditoria/` is internal workshop
-and is not published.
+The public site lives on the `landing` branch (its source is the `www/`
+folder on that branch; it is not uploaded on `main`, which only keeps
+the plain-HTML fallback in `site/`). `docs/auditoria/` is internal
+workshop and is not published.
 
 ## What the house does
 
@@ -177,8 +178,9 @@ Everything lives in pi's native files (`~/.pi/agent/models.json`, `auth.json`,
 
 Zero runtime dependencies; keys always masked; writes with diff, backup and
 atomic rename; advisory pre-install audit on essentials. The budget never
-leaves your disk. There is house network (models.dev, npm, the update
-channel); the detail is in [datos-y-config.md](docs/datos-y-config.md).
+leaves your disk. There is house network (models.dev, npm and the update channel,
+`pi.686f6c61.dev`); the detail is in
+[datos-y-config.md](docs/datos-y-config.md).
 Failure policy in [SECURITY.md](SECURITY.md).
 
 ## Development

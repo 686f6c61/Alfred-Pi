@@ -4,7 +4,7 @@ import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { installedNpmPackages, isEssentialInstalled, missingEssentials, ESSENTIALS } from "../lib/essentials.ts"
 import { collectUsage, aggregateUsage, costOfTokens, formatUsageReport, pricingTable } from "../lib/usage.ts"
-import { recordResponse, nextStepAfter, loadFallbackState, saveFallbackState, modelKey, FAILURE_THRESHOLD } from "../lib/fallback.ts"
+import { recordTurnOutcome, nextStepAfter, loadFallbackState, saveFallbackState, modelKey, FAILURE_THRESHOLD } from "../lib/fallback.ts"
 import type { SettingsFile, ModelsFile } from "../lib/config-io.ts"
 
 // ---------------------------------------------------------------------------
@@ -145,13 +145,13 @@ test("costOfTokens and pricingTable basics", () => {
 // ---------------------------------------------------------------------------
 // Fallback
 
-test("recordResponse counts consecutive failures and resets on success", () => {
+test("recordTurnOutcome counts consecutive failures and resets on success", () => {
   const state = { failures: {} }
-  expect(recordResponse(state, "p", "m", 500)).toBe(false)
-  expect(recordResponse(state, "p", "m", 502)).toBe(true) // crossed threshold
-  expect(recordResponse(state, "p", "m", 500)).toBe(false) // already above, no re-signal
+  expect(recordTurnOutcome(state, "p", "m", "error")).toBe(false)
+  expect(recordTurnOutcome(state, "p", "m", "error")).toBe(true) // crossed threshold
+  expect(recordTurnOutcome(state, "p", "m", "error")).toBe(false) // already above, no re-signal
   expect(state.failures[modelKey("p", "m")]).toBe(3)
-  expect(recordResponse(state, "p", "m", 200)).toBe(false)
+  expect(recordTurnOutcome(state, "p", "m", "stop")).toBe(false)
   expect(state.failures[modelKey("p", "m")]).toBeUndefined()
   expect(FAILURE_THRESHOLD).toBeGreaterThanOrEqual(2)
 })

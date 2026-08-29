@@ -35,8 +35,10 @@ y cómo funciona pi ([pi.md](docs/pi.md)), arquitectura
 ([datos-y-config.md](docs/datos-y-config.md)), cómo extender
 ([extender.md](docs/extender.md)) y cómo probar
 ([probar.md](docs/probar.md)).
-El sitio público es la rama `landing` (en este checkout: carpeta `www/`,
-no se sube en `main`). `docs/auditoria/` es taller interno y no se publica.
+El sitio público vive en la rama `landing` (su código es la carpeta
+`www/` de esa rama; no se sube en `main`, donde solo queda el HTML plano
+de respaldo en `site/`). `docs/auditoria/` es taller interno y no se
+publica.
 
 ## Qué hace la casa
 
@@ -184,8 +186,8 @@ técnica](docs/datos-y-config.md#nota-de-privacidad-técnica).
 
 Cero dependencias en runtime; claves siempre enmascaradas; escrituras con diff,
 backup y atómica; auditoría pre-instalación advisory en esenciales. El
-presupuesto no sale de tu disco. Hay red propia (models.dev, npm, canal de
-actualizaciones); el detalle está en
+presupuesto no sale de tu disco. Hay red propia (models.dev, npm y el canal
+de actualizaciones, `pi.686f6c61.dev`); el detalle está en
 [datos-y-config.md](docs/datos-y-config.md). Política de fallos en
 [SECURITY.md](SECURITY.md).
 

@@ -125,8 +125,9 @@ primer prompt ──▶ before_agent_start ──▶ bucle del agente
       ├──▶ tool call (bash/read/...) ──▶ resultados ──▶ (vuelve a decidir)
       ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ after_provider_response                                      │
-│   estado HTTP → contador por provider/model (semáforo fb:)   │
+│ turn_end                                                     │
+│   stopReason → contador por provider/model (semáforo fb:)    │
+│   error cuenta; aborto es neutro; éxito limpia la racha      │
 └──────────────────────────────────────────────────────────────┘
       │
       ▼
@@ -301,7 +302,7 @@ Presentación sigue siendo la capa adaptadora de la TUI, sin modelo propio.
 |---|---|---|
 | `session_start` | arranque, reload, nueva, resume | flag headless, asistente si no hay casa, cabecera, statusline, update-check, reset de persona |
 | `before_agent_start` | pre-bucle | `curateTurn`: relevo, radar, presupuesto, persona |
-| `after_provider_response` | tras cada HTTP o error de transporte | conteo de fallos por `provider/model`; nunca `setModel` aquí |
+| `turn_end` | cierre de cada turno | conteo de fallos por `provider/model` desde `stopReason` (`error` cuenta, `aborted` es neutro, el resto limpia); nunca `setModel` aquí. Se eligió `turn_end` y no `after_provider_response` porque pi solo emite este último cuando hay respuesta HTTP: un rechazo de conexión, un DNS, un timeout o un 5xx nunca llegan a él |
 | `model_select` | cambio de modelo | refresco del statusline |
 
 Eventos de pi que este harness **no** engancha: `tool_call`,

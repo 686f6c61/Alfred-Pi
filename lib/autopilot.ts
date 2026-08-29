@@ -187,6 +187,11 @@ export function formatRadarStatus(auto: { enabled: boolean; routing: string; las
   return `ON (${auto.routing}) · ${radarRoomLabel({ enabled: true, injectedDomainId: auto.lastDomainId })}`
 }
 
+/** Headless plain text (`--alfred-pi=autopilot`); `:json` is the machine twin. */
+export function formatAutopilotText(auto: { enabled: boolean; routing: string; lastDomainId?: string }): string[] {
+  return [`Alfred-Pi autopilot`, `  radar: ${formatRadarStatus(auto)}`]
+}
+
 /**
  * Per-turn radar decision: the injection string plus the room label that
  * status text can read. Autopilot ON with no match is «sin sala», not a

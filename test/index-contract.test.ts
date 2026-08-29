@@ -92,15 +92,19 @@ test("before_agent_start_focused_context", async () => {
   expect(ret?.systemPrompt ?? "").not.toContain("# Clean Code")
 })
 
-function refused(): Error {
-  return Object.assign(new Error("connect ECONNREFUSED 127.0.0.1:11434"), { code: "ECONNREFUSED" })
+// Shape of the turn_end event payload pi actually delivers (verified against
+// pi 0.84.3): an assistant message carrying provider/model and a stopReason
+// of "error", "aborted" or "stop". HTTP status never reaches extensions on
+// failed requests, so turn_end is the only reliable failure signal.
+function failedTurn(provider: string, model: string, errorMessage: string) {
+  return { message: { role: "assistant", content: [], provider, model, stopReason: "error", errorMessage } }
 }
 
-function timeoutErr(): Error {
-  return Object.assign(new Error("aborted"), { name: "AbortError" })
+function okTurn(provider: string, model: string) {
+  return { message: { role: "assistant", content: [{ type: "text", text: "hola" }], provider, model, stopReason: "stop" } }
 }
 
-test("after_provider_response_heal", async () => {
+test("turn_end_heal", async () => {
   mkdirSync(dataDir(), { recursive: true })
   writeFileSync(
     join(dataDir(), "profiles.json"),
@@ -118,10 +122,10 @@ test("after_provider_response_heal", async () => {
     },
   }
 
-  await handlers["after_provider_response"]!({ status: 500 }, ctx)
+  await handlers["turn_end"]!(failedTurn("failing", "m1", "500: internal error"), ctx)
   expect(notifyCalls).toHaveLength(0)
-  await handlers["after_provider_response"]!({ status: 500 }, ctx)
-  // Two consecutive 500s cross the threshold: the user is warned in house copy.
+  await handlers["turn_end"]!(failedTurn("failing", "m1", "Connection error."), ctx)
+  // Two consecutive failed turns cross the threshold: the user is warned in house copy.
   expect(notifyCalls.length).toBeGreaterThan(0)
   expect(notifyCalls.some((n) => n.includes("paso a tu reserva"))).toBe(true)
   expect(notifyCalls).toContain(relevoAviso("failing/m1", "healthy/m2"))
@@ -134,7 +138,7 @@ test("after_provider_response_heal", async () => {
   expect(loadFallbackState(dataDir()).previousModel).toEqual({ provider: "failing", model: "m1" })
 })
 
-test("after_provider_response_transport_counts_and_never_setModel", async () => {
+test("turn_end_transport_failure_counts_and_never_setModel", async () => {
   mkdirSync(dataDir(), { recursive: true })
   writeFileSync(
     join(dataDir(), "profiles.json"),
@@ -152,14 +156,34 @@ test("after_provider_response_transport_counts_and_never_setModel", async () => 
     },
   }
 
-  // A 200 with a transport error must still count: today the adapter only
-  // forwards status, so 200 would reset the counter.
-  await handlers["after_provider_response"]!({ status: 200, error: timeoutErr() }, ctx)
+  // A transport failure (connection refused) arrives as stopReason "error":
+  // counting it must push toward the threshold without switching models.
+  await handlers["turn_end"]!(failedTurn("failing", "m1", "Connection error."), ctx)
   expect(notifyCalls).toHaveLength(0)
   expect(setModelCalls).toHaveLength(0)
-  await handlers["after_provider_response"]!({ status: 200, error: refused() }, ctx)
+  await handlers["turn_end"]!(failedTurn("failing", "m1", "Connection error."), ctx)
   expect(notifyCalls.length).toBeGreaterThan(0)
   expect(notifyCalls.some((n) => n.includes("paso a tu reserva"))).toBe(true)
+  expect(setModelCalls).toHaveLength(0)
+})
+
+test("turn_end_success_resets_and_aborted_is_neutral", async () => {
+  mkdirSync(dataDir(), { recursive: true })
+  writeFileSync(join(dataDir(), "fallback.json"), JSON.stringify({ activeProfile: "heal", failures: { "failing/m1": 1 } }))
+
+  const ctx = {
+    mode: "print",
+    ui: { notify: async (msg: string) => void notifyCalls.push(msg), setStatus: async () => {} },
+    model: { provider: "failing", id: "m1" },
+  }
+
+  // A user abort is not a provider failure: it must not add to the streak.
+  await handlers["turn_end"]!({ message: { role: "assistant", content: [], provider: "failing", model: "m1", stopReason: "aborted" } }, ctx)
+  expect(loadFallbackState(dataDir()).failures["failing/m1"]).toBe(1)
+  // A completed turn clears it.
+  await handlers["turn_end"]!(okTurn("failing", "m1"), ctx)
+  expect(loadFallbackState(dataDir()).failures["failing/m1"]).toBeUndefined()
+  expect(notifyCalls).toHaveLength(0)
   expect(setModelCalls).toHaveLength(0)
 })
 

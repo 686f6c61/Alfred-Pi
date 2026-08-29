@@ -392,3 +392,20 @@ export function enabledDomainsContext(state: DomainsState, repoRoot = findRepoRo
   if (parts.length === 0) return ""
   return [`<domain-packs>`, ...parts, `</domain-packs>`].join("\n\n")
 }
+
+export interface DomainHeadlessPack {
+  id: string
+  name: string
+  skills: number
+  prompts: number
+  enabled: boolean
+}
+
+/** Headless plain text (`--alfred-pi=domains`); `:json` is the machine twin. */
+export function formatDomainsText(packs: DomainHeadlessPack[]): string[] {
+  const lines: string[] = [`Alfred-Pi domains - ${packs.length} packs`]
+  for (const pack of packs) {
+    lines.push(`  ${pack.enabled ? "✓" : "·"} ${pack.id} · ${pack.skills} skills · ${pack.prompts} prompts${pack.enabled ? " · habilitado" : ""}`)
+  }
+  return lines
+}

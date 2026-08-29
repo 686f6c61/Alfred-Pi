@@ -85,15 +85,24 @@ test("headless: stack prints text and stack:json prints valid JSON", async () =>
   expect(json.autopilot.enabled).toBe(false)
 })
 
-test("headless: autopilot and domains flags print valid JSON payloads", async () => {
-  for (const flag of ["autopilot", "autopilot:json"]) {
-    const payload = JSON.parse(await runHeadless(flag)) as { enabled: boolean; routing: string }
-    expect(payload.enabled).toBe(false)
-    expect(payload.routing).toBe("context")
-  }
-  for (const flag of ["domains", "domains:json"]) {
-    const payload = JSON.parse(await runHeadless(flag)) as { packs: { id: string; enabled: boolean }[] }
-    expect(payload.packs).toHaveLength(11)
-    expect(payload.packs.every((p) => p.enabled === false)).toBe(true)
-  }
+test("headless: autopilot text by default, autopilot:json as machine twin", async () => {
+  const text = await runHeadless("autopilot")
+  expect(text).toContain("Alfred-Pi autopilot")
+  expect(text).toContain("radar: off")
+
+  const json = JSON.parse(await runHeadless("autopilot:json")) as { enabled: boolean; routing: string; lastDomainId: string | null }
+  expect(json.enabled).toBe(false)
+  expect(json.routing).toBe("context")
+  expect(json.lastDomainId).toBeNull()
+})
+
+test("headless: domains text by default, domains:json as machine twin", async () => {
+  const text = await runHeadless("domains")
+  expect(text).toContain("Alfred-Pi domains - 11 packs")
+  expect(text).toContain("· security ·")
+  expect(text).not.toContain("habilitado")
+
+  const json = JSON.parse(await runHeadless("domains:json")) as { packs: { id: string; enabled: boolean }[] }
+  expect(json.packs).toHaveLength(11)
+  expect(json.packs.every((p) => p.enabled === false)).toBe(true)
 })

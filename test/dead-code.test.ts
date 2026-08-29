@@ -27,17 +27,20 @@ test("prober_modelsUrl_switch_case_equals_default", () => {
   expect(body).not.toContain("switch")
 })
 
-test("headless_output_format_is_json", () => {
-  // Print mode must always write the payload as JSON: the `:json` suffix
-  // may select the json flavor, but its absence must not produce a
-  // different serialization. Every stdout write of the payload has to go
-  // through JSON.stringify.
+test("headless_output_chooses_format_on_json_suffix", () => {
+  // The `:json` suffix selects JSON for machines; its absence selects the
+  // human text formatter (formatStackText / formatAutopilotText /
+  // formatDomainsText), exactly as docs/comandos.md promises. A fake
+  // `:json` — same output with and without the suffix — is a bug: it made
+  // autopilot/domains print raw JSON both ways in 0.4.0.
   const writes = INDEX.split("\n").filter((l) => l.includes("process.stdout.write"))
   expect(writes.length).toBeGreaterThan(0)
-  const payloadWrites = writes.filter((l) => l.includes("payload"))
-  expect(payloadWrites.length).toBeGreaterThan(0)
-  for (const line of payloadWrites) {
-    expect(line).toContain("JSON.stringify(payload")
+  const branchingWrites = writes.filter((l) => l.includes("JSON.stringify("))
+  // stack and autopilot/domains (autopilot+domains share one write).
+  expect(branchingWrites.length).toBe(2)
+  for (const line of branchingWrites) {
+    expect(line).toContain('":json"')
+    expect(line).toMatch(/formatStackText|lines\.join/)
   }
   // No raw or alternative serialization sneaks into print mode.
   expect(INDEX).not.toMatch(/print[^}]*String\(payload/)

@@ -1,5 +1,37 @@
 # Changelog
 
+## Sin publicar
+
+### Corregido
+
+- **El relevo no llegaba a dispararse nunca.** El conteo de fallos vivía en
+  `after_provider_response`, y pi solo emite ese evento cuando hay respuesta
+  HTTP: un rechazo de conexión, un DNS, un timeout o un 5xx nunca llegan a
+  él, así que el contador no pasaba de cero y el relevo era inalcanzable
+  (verificado contra pi 0.84.3 con un proveedor real caído). El conteo pasa
+  a `turn_end`, que sí se emite en todo cierre de turno: `stopReason:
+  "error"` cuenta (HTTP o transporte por igual), `aborted` es neutro y el
+  resto limpia la racha. Nueva guard `fallback-turn-outcome.test.ts` para
+  que el conteo no vuelva a cablearse a un evento que no ve fallos.
+- `--alfred-pi=autopilot` y `domains` imprimen texto legible; el sufijo
+  `:json` da el objeto para máquinas, como ya hacía `stack` y como
+  prometía `docs/comandos.md`. Antes ambas variantes imprimían el mismo
+  JSON crudo.
+- `recordTransportFailure` y `classifyTransportFailure` eran código muerto
+  (nadie los invocaba en runtime); se retiran junto a `recordResponse`.
+
+### Documentación
+
+- README ES/EN: la frase del sitio público ya no dice que `www/` está en
+  este checkout (vive en la rama `landing`; `main` solo guarda el HTML
+  plano de respaldo en `site/`). La sección de seguridad nombra el host
+  del canal de actualizaciones (`pi.686f6c61.dev`), que ya estaba en la
+  nota de privacidad.
+- `package.json` pierde los scripts `docs:site*`: apuntaban a `www/`, que
+  no existe en `main`, y fallaban en cualquier checkout.
+- `arquitectura.md`, `pi.md`, `modulos.md`, `probar.md` y `comandos.md`
+  reflejan el nuevo evento de conteo y el reparto texto/JSON del flag.
+
 ## 0.4.0
 
 ### Packs

@@ -59,7 +59,7 @@ sesiones. Alfred-Pi es el resto del sistema operativo.
  │         → volver a 2 con los resultados      │
  │    no → mensaje final del asistente          │
  ├──────────────────────────────────────────────┤
- │ 4. after_provider_response (health)          │
+ │ 4. turn_end (salud del proveedor)            │
  │ 5. agent_settled / fin de turno              │
  └──────────────────────────────────────────────┘
 ```
@@ -122,7 +122,7 @@ bug real: los handlers de comando reciben `(args: string, ctx)`, no
 `(ctx)`; el primer parámetro son los argumentos del comando.
 
 Este harness engancha cuatro eventos (`session_start`,
-`before_agent_start`, `after_provider_response`, `model_select`). No
+`before_agent_start`, `turn_end`, `model_select`). No
 engancha `tool_call`, `tool_result` ni `agent_settled`: el núcleo de pi
 sigue ejecutando herramientas; la capa de producto actúa en los bordes
 del turno. Detalle en [arquitectura.md](arquitectura.md) y

@@ -50,8 +50,8 @@ respondiendo y el doctor avisa. Valores que el arranque reconoce:
 | `usage:N` | El mismo informe acotado a los últimos N días |
 | `stack` | Torre de control en texto |
 | `stack:json` | La misma torre en JSON |
-| `autopilot` y `autopilot:json` | `{enabled, routing, lastDomainId}` |
-| `domains` y `domains:json` | Lista de packs con skills, prompts y si están habilitados |
+| `autopilot` | Estado del radar en texto (`:json` lo da como objeto) |
+| `domains` | Los 11 packs en texto, con skills, prompts y habilitación (`:json` como lista de objetos) |
 
 Ejemplo:
 

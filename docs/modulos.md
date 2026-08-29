@@ -16,7 +16,7 @@ alias deprecado y en 0.4.0 sigue respondiendo. Engancha:
   statusline, update-check.
 - `before_agent_start`: llama a `curateTurn` y aplica `setModel` si hay
   relevo.
-- `after_provider_response`: cuenta fallos HTTP y de transporte.
+- `turn_end`: cuenta fallos de turno desde `stopReason`; un éxito limpia la racha y un aborto no cuenta. (pi no emite evento HTTP alguno en fallos de conexión o 5xx, así que el conteo vive en el cierre del turno.)
 - `model_select`: refresco del statusline.
 
 Referencia de comandos: [comandos.md](comandos.md).
@@ -34,7 +34,7 @@ Referencia de comandos: [comandos.md](comandos.md).
 | `profiles.ts` | Perfiles: pilas `{provider, model, thinkingLevel}` con cadena de preferencia | `loadProfiles`, `pickStep`, `upsertProfile` |
 | `domains.ts` | Manifiestos de packs (`triggers`, `repoHints`), descubrimiento, habilitación por symlinks con comprobación de propiedad, contexto apilado de los packs habilitados | `discoverDomains`, `enableDomain`, `disableDomain`, `enabledDomainsContext` |
 | `autopilot.ts` | Estado y cascada de detección (prompt → repo → sticky) con scoring ponderado; contexto enfocado de un pack | `detectDomain`, `detectDomainFull`, `domainContext` |
-| `fallback.ts` | Relevo entre turnos: conteo de fallos consecutivos (umbral 2), elección del siguiente eslabón resoluble | `recordResponse`, `nextStepAfter` |
+| `fallback.ts` | Relevo entre turnos: conteo de fallos consecutivos (umbral 2), elección del siguiente eslabón resoluble | `recordTurnOutcome`, `nextStepAfter` |
 | `budget.ts` | Gasto del día desde sesiones + precios de models.json; niveles 80/100 con aviso único diario; nota de frugalidad | `evaluateBudget`, `spendToday`, `budgetExceededNote` |
 | `usage.ts` | Colección offline desde las sesiones JSONL de pi, agregados por modelo/día/top sesiones, tarifación honesta (n/a sin precio) | `collectUsage`, `aggregateUsage`, `formatUsageReport` |
 | `catalog.ts` | Catálogo models.dev con caché 24 h, alias de proveedor, autorrelleno de campos vacíos, intenciones de modelo | `fetchCatalog`, `classifyIntention`, `pickModelsForIntention` |
