@@ -1,6 +1,6 @@
 # Changelog
 
-## Sin publicar
+## 0.5.0 (en preparación)
 
 ### Corregido
 
