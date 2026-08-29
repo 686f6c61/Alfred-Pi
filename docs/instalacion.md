@@ -52,7 +52,8 @@ preset de la casa (z.ai GLM y Coding Plan, Kimi, Ollama Cloud, OpenRouter,
 DeepSeek…) se montan solos; los demás entran como proveedor custom con su
 baseURL. Copia, no muda: OpenCode sigue funcionando igual y nada viaja a la
 red durante la importación; la sonda corre después, con cada servidor, y el
-estado queda a la vista.
+estado queda a la vista. En agent dirs aislados (`PI_CODING_AGENT_DIR`), la
+importación no se ofrece: las claves no se filtran a entornos desechables.
 
 ## Primer arranque
 
