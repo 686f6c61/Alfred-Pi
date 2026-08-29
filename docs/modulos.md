@@ -29,7 +29,7 @@ Referencia de comandos: [comandos.md](comandos.md).
 | `diff.ts` | Diff unificado LCS con hunks de 3 líneas de contexto | `unifiedDiff`, `diffLines` |
 | `config-io.ts` | Tipos de los archivos nativos, lectura tolerante, escritura atómica, backups con retención/pin/restauración, plan→apply | `loadModels/Auth/Settings`, `planWrites`, `applyPlan`, `backupFiles`, `restoreBackup` |
 | `prober.ts` | Sondas por api type (bearer, x-api-key, key en query), descubrimiento `/models`, deep probe de 1 token, resolución de claves literales y `$ENV` (`!` se rechaza), máscara, sonda de rol developer vs system | `probeLiveness`, `discoverModels`, `deepProbe`, `resolveKeyRef`, `probeSystemRoleSupport` |
-| `presets.ts` | 22 presets de proveedor con clave por env y `compat` para servidores propios | `PROVIDER_PRESETS`, `findPreset` |
+| `presets.ts` | 30 presets de proveedor con clave por env y `compat` para servidores propios | `PROVIDER_PRESETS`, `findPreset` |
 | `doctor.ts` | Chequeos estáticos de config, reconciliación, liveness paralelo, sonda de rol, historial `health.jsonl` y formato del informe | `runDoctor`, `checkConfigs`, `summarizeHealth`, `formatDoctorReport` |
 | `profiles.ts` | Perfiles: pilas `{provider, model, thinkingLevel}` con cadena de preferencia | `loadProfiles`, `pickStep`, `upsertProfile` |
 | `domains.ts` | Manifiestos de packs (`triggers`, `repoHints`), descubrimiento, habilitación por symlinks con comprobación de propiedad, contexto apilado de los packs habilitados | `discoverDomains`, `enableDomain`, `disableDomain`, `enabledDomainsContext` |

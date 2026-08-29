@@ -20,6 +20,16 @@
 - `recordTransportFailure` y `classifyTransportFailure` eran código muerto
   (nadie los invocaba en runtime); se retiran junto a `recordResponse`.
 
+### Proveedores
+
+- Ocho presets nuevos: Google Gemini (AI Studio, con sonda por
+  `x-goog-api-key`), Alibaba Qwen (Model Studio), MiniMax, NVIDIA NIM,
+  Perplexity, Hugging Face Router, Azure OpenAI (con cabecera `api-key` y
+  URL de recurso editable) y Amazon Bedrock (vía gateway LiteLLM).
+  Con ellos, el catálogo llega a 30 presets; los presets pueden llevar
+  cabeceras propias resueltas desde `$ENV`.
+- Importación de OpenCode ampliada con alias para todos ellos.
+
 ### Onboarding
 
 - Importación de credenciales de OpenCode en el primer arranque: el asistente

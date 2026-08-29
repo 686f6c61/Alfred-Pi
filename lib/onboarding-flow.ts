@@ -242,11 +242,15 @@ async function importFoundSources(
   for (const { item, origin, allowInsecure, api, preset, baseUrl } of usable) {
     const providerId = item.presetId ?? item.sourceId
     await ui.setStatus("alfred-onboarding", `probando ${item.sourceId}...`)
+    const importHeaders = Object.fromEntries(
+      Object.entries(preset?.headers ?? {}).map(([name, ref]) => [name, resolveKeyRef(ref).value ?? ref]),
+    )
     const probe = await probeLiveness({
       provider: providerId,
       baseUrl,
       api,
       apiKey: item.key,
+      headers: importHeaders,
       credentialPolicy: { authorizedOrigin: origin, ...(allowInsecure ? { allowInsecureLoopback: true } : {}) },
     })
     await ui.setStatus("alfred-onboarding", undefined)
@@ -256,6 +260,7 @@ async function importFoundSources(
       api,
       apiKey: item.key,
       credentialPolicy: { authorizedOrigin: origin, ...(allowInsecure ? { allowInsecureLoopback: true } : {}) },
+      ...(Object.keys(importHeaders).length > 0 ? { headers: importHeaders } : {}),
       ...(preset?.compat ? { compat: preset.compat } : {}),
       ...(discovered.length > 0 ? { models: discovered } : {}),
     }
@@ -506,11 +511,15 @@ export async function onboardingFlow(
     probe = { ok: true, latencyMs: 0, models: ollamaModels }
   } else {
     await ui.setStatus("alfred-onboarding", `probando ${preset.label}...`)
+    const extraHeaders = Object.fromEntries(
+      Object.entries(preset.headers ?? {}).map(([name, ref]) => [name, resolveKeyRef(ref).value ?? ref]),
+    )
     probe = await probeLiveness({
       provider: preset.id,
       baseUrl: presetBaseUrl,
       api: preset.api as ApiType,
       apiKey: resolved.value,
+      headers: extraHeaders,
       credentialPolicy,
     })
     await ui.setStatus("alfred-onboarding", undefined)
@@ -540,6 +549,7 @@ export async function onboardingFlow(
     api: preset.api,
     ...(key ? { apiKey: key } : {}),
     ...(credentialPolicy ? { credentialPolicy } : {}),
+    ...(Object.keys(preset.headers ?? {}).length > 0 ? { headers: preset.headers } : {}),
     ...(preset.compat ? { compat: preset.compat } : {}),
   }
   const discovered = (probe.models ?? []).slice(0, 5).map((id) => ({ id }))
