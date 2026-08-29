@@ -13,7 +13,7 @@ import { loadAutopilotState, saveAutopilotState } from "./autopilot.ts"
 import { loadBudgetState, saveBudgetState } from "./budget.ts"
 import { enableAllDomains } from "./domains.ts"
 import { DEFAULT_OLLAMA_BASE, ollamaTags } from "./ollama.ts"
-import { scanOpencodeSources, type OpencodeImportItem } from "./import-sources.ts"
+import { scanOpencodeSources, usableBaseUrl, type OpencodeImportItem } from "./import-sources.ts"
 
 const ROUTE_LABELS = [
   "Ya pago una nube o tengo una clave",
@@ -192,22 +192,33 @@ async function importFoundSources(
   const paths = getPaths(dirs.agentDir)
 
   // Un solo permiso de orígenes: la clave solo viaja a los origenes listados.
+  // Los servidores sin URL en OpenCode la piden aquí, con sugerencia.
   const origins: string[] = []
-  const usable: Array<{ item: OpencodeImportItem; origin: string; allowInsecure: boolean; api: ApiType; preset?: ProviderPreset }> = []
-  for (const item of items) {
+  const usable: Array<{ item: OpencodeImportItem; origin: string; allowInsecure: boolean; api: ApiType; preset?: ProviderPreset; baseUrl: string }> = []
+  for (const original of items) {
+    let item = original
+    if (!item.baseUrl) {
+      const raw = await ui.input(`URL base para ${item.sourceId}`, item.suggestedUrl ?? "https://")
+      const url = usableBaseUrl(raw?.trim())
+      if (!url) {
+        await ui.notify(`Sin URL utilizable para ${item.sourceId}: se omite. Puedes añadirla luego en /providers.`, "warning")
+        continue
+      }
+      item = { ...item, baseUrl: url }
+    }
     const preset = item.presetId ? findPreset(item.presetId) : undefined
     const api = (preset?.api ?? "openai-completions") as ApiType
     let origin = ""
     let allowInsecure = false
     try {
-      const url = new URL(item.baseUrl ?? "")
+      const url = new URL(item.baseUrl)
       origin = url.origin
       allowInsecure = url.protocol === "http:"
     } catch {
       continue
     }
     if (!origins.includes(origin)) origins.push(origin)
-    usable.push({ item, origin, allowInsecure, api, preset: preset ?? undefined })
+    usable.push({ item, origin, allowInsecure, api, preset: preset ?? undefined, baseUrl: item.baseUrl })
   }
   if (usable.length === 0) {
     await ui.notify("Ninguno de los servidores encontrados tiene una URL utilizable; nada se importó.", "warning")
@@ -228,12 +239,12 @@ async function importFoundSources(
   let defaultProvider: string | undefined
   let defaultModel: string | undefined
   const results: string[] = []
-  for (const { item, origin, allowInsecure, api, preset } of usable) {
+  for (const { item, origin, allowInsecure, api, preset, baseUrl } of usable) {
     const providerId = item.presetId ?? item.sourceId
     await ui.setStatus("alfred-onboarding", `probando ${item.sourceId}...`)
     const probe = await probeLiveness({
       provider: providerId,
-      baseUrl: item.baseUrl ?? "",
+      baseUrl,
       api,
       apiKey: item.key,
       credentialPolicy: { authorizedOrigin: origin, ...(allowInsecure ? { allowInsecureLoopback: true } : {}) },
@@ -241,7 +252,7 @@ async function importFoundSources(
     await ui.setStatus("alfred-onboarding", undefined)
     const discovered = (probe.models ?? []).slice(0, 5).map((id) => ({ id }))
     models.providers[providerId] = {
-      baseUrl: item.baseUrl ?? preset?.baseUrl ?? "",
+      baseUrl,
       api,
       apiKey: item.key,
       credentialPolicy: { authorizedOrigin: origin, ...(allowInsecure ? { allowInsecureLoopback: true } : {}) },
@@ -457,6 +468,23 @@ export async function onboardingFlow(
   state = recordStep(state, `preset:${preset.id}`)
   saveOnboardingState(state, paths.dataDir)
 
+  // Step 1b: pasarelas y servidores propios deciden su propia URL. La
+  // validación y el consentimiento van por approveCredentialOrigin, con sus
+  // diagnósticos específicos.
+  let credentialPolicy = preset.credentialPolicy
+  let presetBaseUrl = preset.baseUrl
+  if (GATEWAY_PRESET_IDS.has(preset.id) || preset.id === "custom-openai") {
+    const raw = await ui.input(`URL base para ${preset.label}`, preset.baseUrl)
+    const policy = await approveCredentialOrigin(ui, (raw ?? "").trim())
+    if (!policy) {
+      saveDeferred(state, paths.dataDir)
+      await ui.notify("Asistente diferido; no se autorizó ni se escribió la credencial.", "warning")
+      return
+    }
+    presetBaseUrl = (raw ?? "").trim()
+    credentialPolicy = policy
+  }
+
   // Step 2: literal local keys need no question; cloud keys keep env refs.
   const keyDefault = preset.keyEnv ? `$${preset.keyEnv}` : preset.keyLiteral ?? ""
   const key = preset.keyLiteral !== undefined
@@ -465,9 +493,8 @@ export async function onboardingFlow(
 
   // Step 3: probe before writing. Ollama's native tags endpoint already did it.
   const resolved = resolveKeyRef(key === "" ? undefined : key)
-  let credentialPolicy = preset.credentialPolicy
   if (key && !credentialPolicy) {
-    credentialPolicy = await approveCredentialOrigin(ui, preset.baseUrl)
+    credentialPolicy = await approveCredentialOrigin(ui, presetBaseUrl)
     if (!credentialPolicy) {
       saveDeferred(state, paths.dataDir)
       await ui.notify("Asistente diferido; no se autorizó ni se escribió la credencial.", "warning")
@@ -481,7 +508,7 @@ export async function onboardingFlow(
     await ui.setStatus("alfred-onboarding", `probando ${preset.label}...`)
     probe = await probeLiveness({
       provider: preset.id,
-      baseUrl: preset.baseUrl,
+      baseUrl: presetBaseUrl,
       api: preset.api as ApiType,
       apiKey: resolved.value,
       credentialPolicy,
@@ -509,7 +536,7 @@ export async function onboardingFlow(
   const modelsR = loadModels(paths)
   const models = modelsR.error ? { providers: {} } : modelsR.data
   const provider: ProviderConfig = {
-    baseUrl: preset.baseUrl,
+    baseUrl: presetBaseUrl,
     api: preset.api,
     ...(key ? { apiKey: key } : {}),
     ...(credentialPolicy ? { credentialPolicy } : {}),

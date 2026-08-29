@@ -19,6 +19,8 @@ export interface OpencodeImportItem {
   presetLabel?: string
   /** URL base efectiva: la del preset, o la de opencode.json para custom. */
   baseUrl?: string
+  /** Sugerencia cuando no hay URL en opencode.json; el asistente la pide. */
+  suggestedUrl?: string
   key: string
   keyMasked: string
 }
@@ -46,6 +48,12 @@ const PRESET_ALIASES: Record<string, string> = {
   "cerebras": "cerebras",
   "fireworks": "fireworks",
   "ollama-cloud": "ollama-cloud",
+}
+
+/** Sugerencia razonada cuando OpenCode no guarda baseURL para un servidor. */
+export function guessSuggestedUrl(sourceId: string): string | undefined {
+  if (sourceId.startsWith("opencode")) return "https://opencode.ai/zen/v1"
+  return undefined
 }
 
 export function maskKey(key: string): string {
@@ -97,7 +105,7 @@ function isLoopback(hostname: string): boolean {
 }
 
 /** URL base utilizable: https, o http en loopback. Cualquier otra cosa, no. */
-function usableBaseUrl(raw: string | undefined): string | undefined {
+export function usableBaseUrl(raw: string | undefined): string | undefined {
   if (!raw) return undefined
   try {
     const url = new URL(raw)
@@ -142,7 +150,7 @@ export function scanOpencodeSources(home = homedir()): OpencodeImportItem[] {
     const exact = PROVIDER_PRESETS.find((p) => p.id === sourceId)
     const aliasId = PRESET_ALIASES[sourceId]
     const preset = exact ?? (aliasId ? PROVIDER_PRESETS.find((p) => p.id === aliasId) : undefined)
-    const customUrl = usableBaseUrl(baseUrls.get(sourceId))
+    const customUrl = baseUrls.get(sourceId)
 
     if (preset) {
       items.push({
@@ -154,16 +162,17 @@ export function scanOpencodeSources(home = homedir()): OpencodeImportItem[] {
         key,
         keyMasked: maskKey(key),
       })
-    } else if (customUrl) {
+    } else {
+      const usable = usableBaseUrl(customUrl)
       items.push({
         sourceId,
         kind: "custom",
-        baseUrl: customUrl,
+        ...(usable ? { baseUrl: usable } : {}),
+        suggestedUrl: usable ?? guessSuggestedUrl(sourceId),
         key,
         keyMasked: maskKey(key),
       })
     }
-    // Sin preset y sin baseURL utilizable: no se puede configurar; no se ofrece.
   }
   return items
 }

@@ -65,16 +65,20 @@ test("scan_offers_unknown_providers_as_custom_with_their_base_url", () => {
   }
 })
 
-test("scan_skips_entries_without_key_or_with_unusable_url", () => {
+test("scan_offers_unknown_without_url_with_a_guided_suggestion", () => {
   const home = fakeHome({
     auth: JSON.stringify({
-      "nvidia-free": { type: "api", key: "nv-key-123456789" },   // sin baseURL utilizable
-      "empty": { type: "api", key: "" },                          // sin clave
+      "opencode-go": { type: "api", key: "sk-zen-1234567890" },  // sin baseURL: se pide, con sugerencia
+      "empty": { type: "api", key: "" },                          // sin clave: no se ofrece
     }),
-    config: JSON.stringify({ provider: { "nvidia-free": { options: { baseURL: "notaurl" } } } }),
+    config: "{}",
   })
   try {
-    expect(scanOpencodeSources(home)).toHaveLength(0)
+    const items = scanOpencodeSources(home)
+    expect(items).toHaveLength(1)
+    expect(items[0].sourceId).toBe("opencode-go")
+    expect(items[0].baseUrl).toBeUndefined()
+    expect(items[0].suggestedUrl).toBe("https://opencode.ai/zen/v1")
   } finally {
     cleanup(home)
   }

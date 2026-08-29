@@ -23,10 +23,17 @@
 ### Onboarding
 
 - Importación de credenciales de OpenCode en el primer arranque: el asistente
-  encuentra los servidores con clave, los muestra enmascarados y los importa
+  encuentra TODOS los servidores con clave (aunque OpenCode no guarde su URL:
+  se pide con sugerencia, p. ej. Zen), los muestra enmascarados y los importa
   con una confirmación; los que casan con preset se montan solos y los custom
   traen su baseURL. Sonda por servidor incluida. La fuente es inyectable
   (`import-sources.ts`, Node puro) para añadir otras herramientas después.
+- Multiplataforma de verdad: se comprueban XDG (Linux/macOS) y
+  `AppData/Roaming` (Windows), con `os.homedir()`. En agent dirs aislados
+  (`PI_CODING_AGENT_DIR`) la importación no se ofrece.
+- Pasarelas y servidor propio (OpenRouter, LiteLLM, custom) preguntan su URL
+  base, con validación y consentimiento de origen: Bedrock, Azure o cualquier
+  gateway OpenAI-compatible se configuran sin tocar ficheros.
 
 ### Documentación
 

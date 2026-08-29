@@ -58,7 +58,7 @@ test("approveCredentialOrigin_approves_http_loopback_and_writes_policy", async (
   // Approve the loopback origin, then accept the config write (and decline
   // autopilot + budget): the written models.json must carry the
   // allowInsecureLoopback policy for the exact localhost origin.
-  const { ui } = scriptedUi({ select: [2, 2], input: ["sk-lab"], confirm: [true, true, false, false] })
+  const { ui } = scriptedUi({ select: [2, 2], input: ["http://localhost:8000/v1", "sk-lab"], confirm: [true, true, false, false] })
   await run(ui)
 
   const models = JSON.parse(await Bun.file(join(agentDir, "models.json")).text()) as {
@@ -71,7 +71,7 @@ test("approveCredentialOrigin_approves_http_loopback_and_writes_policy", async (
 })
 
 test("approveCredentialOrigin_declined_stops_the_flow_before_writing", async () => {
-  const { ui, notifications } = scriptedUi({ select: [2, 2], input: ["sk-lab"], confirm: [false] })
+  const { ui, notifications } = scriptedUi({ select: [2, 2], input: ["http://localhost:8000/v1", "sk-lab"], confirm: [false] })
   await run(ui)
   expect(notifications).toContain("Asistente diferido; no se autorizó ni se escribió la credencial.")
   expect(existsSync(join(agentDir, "models.json"))).toBe(false)
@@ -92,7 +92,7 @@ test("approveCredentialOrigin_rejects_hostile_base_urls", async () => {
   try {
     for (const [hostile, message] of cases) {
       preset.baseUrl = hostile
-      const { ui, notifications } = scriptedUi({ select: [2, 2], input: ["sk-lab"], confirm: [] })
+      const { ui, notifications } = scriptedUi({ select: [2, 2], input: [hostile, "sk-lab"], confirm: [] })
       await run(ui)
       expect(notifications.some((n) => message.test(n))).toBe(true)
       expect(existsSync(join(agentDir, "models.json"))).toBe(false)

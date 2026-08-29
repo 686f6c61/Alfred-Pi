@@ -179,7 +179,7 @@ test("onboarding: key on an unapproved origin, confirm false cancels the wizard"
     globalThis.fetch = failFetch()
     const idx = PROVIDER_PRESETS.findIndex((p) => p.id === "custom-openai")
     expect(idx).toBeGreaterThanOrEqual(0)
-    const scripted = queuedUi({ select: [2, 2], input: ["sk-lab-literal"], confirm: [false] })
+    const scripted = queuedUi({ select: [2, 2], input: ["http://localhost:8000/v1", "sk-lab-literal"], confirm: [false] })
     await runFlow(scripted.ui, { agentDir, repoRoot: agentDir })
 
     expect(scripted.confirms).toBe(1)

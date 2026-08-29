@@ -54,6 +54,10 @@ baseURL. Copia, no muda: OpenCode sigue funcionando igual y nada viaja a la
 red durante la importación; la sonda corre después, con cada servidor, y el
 estado queda a la vista. En agent dirs aislados (`PI_CODING_AGENT_DIR`), la
 importación no se ofrece: las claves no se filtran a entornos desechables.
+Si un servidor de OpenCode no tiene URL guardada, el asistente te la pide
+con una sugerencia. Y si lo tuyo es cualquier otra cosa (Bedrock, Azure,
+un gateway propio), la ruta «Uso una pasarela» pregunta URL base, clave y
+tipo de API sin tocar ficheros a mano.
 
 ## Primer arranque
 
