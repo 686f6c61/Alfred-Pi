@@ -42,6 +42,18 @@ ln -sfn "$PWD" ~/.pi/agent/extensions/alfred-pi
 El symlink sirve el código local en cada arranque; `/reload` recarga tras
 editar.
 
+## Si vienes de OpenCode
+
+Si ya configuraste claves en OpenCode, el asistente de primer arranque las
+encuentra antes de preguntarte nada: lee `~/.local/share/opencode/auth.json`
+y `~/.config/opencode/opencode.json`, te muestra los servidores con clave
+(enmascarados) y los importa con una confirmación. Los que casan con un
+preset de la casa (z.ai GLM y Coding Plan, Kimi, Ollama Cloud, OpenRouter,
+DeepSeek…) se montan solos; los demás entran como proveedor custom con su
+baseURL. Copia, no muda: OpenCode sigue funcionando igual y nada viaja a la
+red durante la importación; la sonda corre después, con cada servidor, y el
+estado queda a la vista.
+
 ## Primer arranque
 
 Si no hay proveedores ni entradas en `auth.json`, la TUI ofrece el

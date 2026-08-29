@@ -1,0 +1,136 @@
+/**
+ * Credenciales que ya viven en el disco de otras herramientas: hoy OpenCode
+ * (auth.json con las claves, opencode.json con las baseURL custom). Locate →
+ * parse → map: devuelve un plan de importación que el asistente muestra
+ * enmascarado y aplica solo con permiso. Copia, nunca muda. Node puro.
+ */
+import { existsSync, readFileSync } from "node:fs"
+import { join } from "node:path"
+import { PROVIDER_PRESETS } from "./presets.ts"
+
+export interface OpencodeImportItem {
+  /** Id del proveedor en OpenCode (zai-coding-plan, nan, ollama-cloud…). */
+  sourceId: string
+  /** "preset" si casa con un preset de la casa; "custom" si viaja con su baseURL. */
+  kind: "preset" | "custom"
+  /** Id del preset de Alfred cuando kind === "preset". */
+  presetId?: string
+  presetLabel?: string
+  /** URL base efectiva: la del preset, o la de opencode.json para custom. */
+  baseUrl?: string
+  key: string
+  keyMasked: string
+}
+
+/** Aliases verificados id de OpenCode → preset de Alfred. Gana el id exacto. */
+const PRESET_ALIASES: Record<string, string> = {
+  "zai": "zai-glm",
+  "zai-coding-plan": "zai-coding",
+  "zai-coding": "zai-coding",
+  "kimi": "moonshot-kimi",
+  "kimi-for-coding": "moonshot-kimi-anthropic",
+  "kimi-coding": "moonshot-kimi-anthropic",
+  "moonshot": "moonshot-kimi",
+  "openai": "openai",
+  "openai-codex": "openai-codex",
+  "anthropic": "anthropic-claude",
+  "claude": "anthropic-claude",
+  "xai": "xai-grok",
+  "grok": "xai-grok",
+  "openrouter": "openrouter",
+  "deepseek": "deepseek",
+  "groq": "groq",
+  "together": "together",
+  "mistral": "mistral",
+  "cerebras": "cerebras",
+  "fireworks": "fireworks",
+  "ollama-cloud": "ollama-cloud",
+}
+
+export function maskKey(key: string): string {
+  if (!key) return "(vacía)"
+  return `${key.slice(0, 7)}… (${key.length} chars)`
+}
+
+/** Rutas canónicas de OpenCode bajo el home del usuario. */
+export function locateOpencode(home: string): { auth: string; config: string } {
+  return {
+    auth: join(home, ".local", "share", "opencode", "auth.json"),
+    config: join(home, ".config", "opencode", "opencode.json"),
+  }
+}
+
+function readTolerantJson(path: string): Record<string, unknown> | undefined {
+  if (!existsSync(path)) return undefined
+  try {
+    const parsed = JSON.parse(readFileSync(path, "utf-8"))
+    return parsed && typeof parsed === "object" ? (parsed as Record<string, unknown>) : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function isLoopback(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "[::1]"
+}
+
+/** URL base utilizable: https, o http en loopback. Cualquier otra cosa, no. */
+function usableBaseUrl(raw: string | undefined): string | undefined {
+  if (!raw) return undefined
+  try {
+    const url = new URL(raw)
+    if (url.protocol === "https:") return raw
+    if (url.protocol === "http:" && isLoopback(url.hostname)) return raw
+  } catch {
+    return undefined
+  }
+  return undefined
+}
+
+/**
+ * Escanea OpenCode y devuelve los servidores importables: clave en auth.json
+ * y, si hace falta, baseURL en opencode.json. Los sin clave o sin URL
+ * utilizable no se ofrecen. Nunca lanza: un fuente roto no bloquea el arranque.
+ */
+export function scanOpencodeSources(home: string): OpencodeImportItem[] {
+  const { auth, config } = locateOpencode(home)
+  const authRaw = readTolerantJson(auth)
+  if (!authRaw) return []
+  const configRaw = readTolerantJson(config)
+  const configProviders = (configRaw?.provider ?? {}) as Record<string, { options?: { baseURL?: string } }>
+
+  const items: OpencodeImportItem[] = []
+  for (const [sourceId, value] of Object.entries(authRaw)) {
+    if (!value || typeof value !== "object") continue
+    const entry = value as { type?: unknown; key?: unknown }
+    const key = typeof entry.key === "string" ? entry.key : ""
+    if (!key) continue
+
+    const exact = PROVIDER_PRESETS.find((p) => p.id === sourceId)
+    const aliasId = PRESET_ALIASES[sourceId]
+    const preset = exact ?? (aliasId ? PROVIDER_PRESETS.find((p) => p.id === aliasId) : undefined)
+    const customUrl = usableBaseUrl(configProviders[sourceId]?.options?.baseURL)
+
+    if (preset) {
+      items.push({
+        sourceId,
+        kind: "preset",
+        presetId: preset.id,
+        presetLabel: preset.label,
+        baseUrl: preset.baseUrl,
+        key,
+        keyMasked: maskKey(key),
+      })
+    } else if (customUrl) {
+      items.push({
+        sourceId,
+        kind: "custom",
+        baseUrl: customUrl,
+        key,
+        keyMasked: maskKey(key),
+      })
+    }
+    // Sin preset y sin baseURL utilizable: no se puede configurar; no se ofrece.
+  }
+  return items
+}
